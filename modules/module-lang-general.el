@@ -93,7 +93,6 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package gradle-mode
-  :ensure t
   :commands (gradle-mode)
   :hook prog-mode)
 

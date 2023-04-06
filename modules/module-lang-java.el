@@ -23,9 +23,6 @@
   :load-path thirdparty-dir
   :mode "\\.jflex\\'")
 
-(use-package gradle-mode :ensure t
-  :commands (gradle-run))
-
 (use-package flycheck
   :commands (flycheck-mode)
   :hook (java-mode . flycheck-mode))
