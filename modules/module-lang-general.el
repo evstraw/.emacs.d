@@ -64,15 +64,15 @@
   (sp-with-modes '(java-mode c++-mode c-mode go-mode groovy-mode arduino-mode)
     (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
     (sp-local-pair "/**" "*/" :post-handlers '(("| " "SPC")
-     										   (" ||\n[i]" "RET")))
-	(sp-local-pair "'" "'"))
+     					       (" ||\n[i]" "RET")))
+    (sp-local-pair "'" "'"))
   (sp-with-modes '(css-mode js2-mode js-mode)
     (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
     (sp-local-pair "/**" "*/" :post-handlers '(("| " "SPC")
-     										   (" ||\n[i]" "RET"))))
+     					       (" ||\n[i]" "RET"))))
   (sp-with-modes '(tuareg-mode utop-mode)
     (sp-local-pair "(*" "*)" :post-handlers '(("| " "SPC")
-											  (" ||\n[i]" "RET")))))
+					      (" ||\n[i]" "RET")))))
 
 ;; ---------------
 ;; Generic configuration for all languages
