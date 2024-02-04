@@ -99,7 +99,7 @@
 
 (add-hook 'prog-mode-hook
 	  #'(lambda ()
-	      (linum-mode)
+	      (display-line-numbers-mode)
 	      (auto-fill-mode)
 	      (setq fill-column 95)
 	      (display-fill-column-indicator-mode)))
