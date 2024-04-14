@@ -88,7 +88,8 @@ So we need to fix this ourselves."
 ;; fix font
 (require 'machine-select)
 (set-face-attribute 'default nil
-		    :height (if (eq machine-select-machine 'desktop) 105 110)
+		    :family "DejaVu Sans Mono"
+		    :height (if (eq machine-select-machine 'desktop) 94 105)
 		    :width 'normal)
 
 (provide 'module-appearance)
