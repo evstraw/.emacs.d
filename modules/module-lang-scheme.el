@@ -28,6 +28,10 @@
   :config
   :hook ((scheme-mode . setup-scheme-style)))
 
+(use-package lsp-scheme
+  :custom (lsp-scheme-implementation "guile")
+  :hook (scheme-mode . lsp-scheme))
+
 (use-package geiser
   :commands (geiser
 	     run-geiser)
