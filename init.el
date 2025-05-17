@@ -115,7 +115,6 @@ may be added later.\")
 (require 'module-ledger)
 (require 'module-pdf)
 (require 'module-org)
-(require 'module-email)
 (require 'module-tex)
 (require 'module-misc)
 
