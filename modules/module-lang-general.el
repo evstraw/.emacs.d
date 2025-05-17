@@ -61,7 +61,8 @@
   :config
   (require 'smartparens-config)
   (smartparens-global-mode)
-  (sp-with-modes '(java-mode c++-mode c-mode go-mode groovy-mode arduino-mode)
+  (sp-with-modes '(java-mode c++-mode c-mode go-mode
+		   groovy-mode arduino-mode rustic-mode rust-mode)
     (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
     (sp-local-pair "/**" "*/" :post-handlers '(("| " "SPC")
      					       (" ||\n[i]" "RET")))
