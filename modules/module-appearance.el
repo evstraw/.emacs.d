@@ -89,7 +89,7 @@ So we need to fix this ourselves."
 (require 'machine-select)
 (set-face-attribute 'default nil
 		    :family "DejaVu Sans Mono"
-		    :height (if (eq machine-select-machine 'desktop) 94 105)
+		    :height (if (eq machine-select-machine 'desktop) 94 95)
 		    :width 'normal)
 
 (use-package emojify
