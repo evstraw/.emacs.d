@@ -107,12 +107,12 @@
 (use-package realgud
   :commands (realgud:gdb))
 
-(require 'ansi-color)
-(defun colorize-compilation-buffer ()
-  (toggle-read-only)
-  (ansi-color-apply-on-region compilation-filter-start (point))
-  (toggle-read-only))
-(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
+(use-package ansi-color
+  :config
+  (defun colorize-compilation-buffer ()
+    (let ((inhibit-read-only t))
+      (ansi-color-apply-on-region compilation-filter-start (point))))
+  :hook (compilation-filter . colorize-compilation-buffer))
 
 (use-package flycheck
   :hook (prog-mode . flycheck-mode))
