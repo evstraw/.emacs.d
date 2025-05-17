@@ -9,17 +9,7 @@
 (defvar guix-load-path "~/.config/guix/current/share/guile/site/3.0"
   "The location of Guix Scheme modules.")
 
-(use-package geiser
-  :commands (geiser
-	     run-geiser)
-  :init
-  (put 'geiser-guile-load-path 'safe-local-variable #'listp)
-  (setq geiser-active-implementations '(guile racket chicken))
-  (with-eval-after-load 'geiser-guile
-    (add-to-list 'geiser-guile-load-path guix-checkout)
-    (add-to-list 'geiser-guile-load-path guix-load-path))
-  :config
-  (defun setup-scheme-style ()
+(defun setup-scheme-style ()
     (put 'eval-when 'scheme-indent-function 1)
     (put 'call-with-prompt 'scheme-indent-function 1)
     (put 'test-assert 'scheme-indent-function 1)
@@ -34,10 +24,24 @@
     (put 'sxml-match 'scheme-indent-function 1)
     (put 'pre-post-order 'scheme-indent-function 1)
     (put 'match-record 'scheme-indent-function 2))
+(use-package scheme
+  :config
+  :hook ((scheme-mode . setup-scheme-style)))
+
+(use-package geiser
+  :commands (geiser
+	     run-geiser)
+  :custom (geiser-default-implementation 'guile)
+  :init
+  (put 'geiser-guile-load-path 'safe-local-variable #'listp)
+  (setq geiser-active-implementations '(guile racket chicken))
+  (with-eval-after-load 'geiser-guile
+    (add-to-list 'geiser-guile-load-path guix-checkout)
+    (add-to-list 'geiser-guile-load-path guix-load-path))
+  :config
   :hook ((scheme-mode . (lambda ()
 			  (geiser-mode)
 			  (rainbow-delimiters-mode)
-			  (setup-scheme-style)
 			  (setup-prettify-symbols)))
 	 (geiser-repl-mode . (lambda ()
 			       (rainbow-delimiters-mode)
