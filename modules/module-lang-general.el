@@ -18,7 +18,7 @@
   (setq lsp-keymap-prefix "M-l")
   :commands (lsp)
   :bind (:map lsp-mode-map
-			  ("C-c C-r" . lsp-rename))
+	      ("C-c C-r" . lsp-rename))
   :config
   (setq lsp-file-watch-threshold 3000)
   (setq read-process-output-max (* 1024 1024))
