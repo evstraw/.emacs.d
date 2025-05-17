@@ -92,4 +92,7 @@ So we need to fix this ourselves."
 		    :height (if (eq machine-select-machine 'desktop) 94 105)
 		    :width 'normal)
 
+(use-package emojify
+  :commands (emojify-mode))
+
 (provide 'module-appearance)
