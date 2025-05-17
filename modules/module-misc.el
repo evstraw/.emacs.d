@@ -91,8 +91,9 @@
      ("a" "Org Agenda" org-agenda)
      ("M" "Mail" gnus)
      ("f" "Visit linked file" visit-file-truename)])
-  :bind ("C-<menu>" . quick-goto)
-  ("C-<f12>" . quick-goto))
+  :bind (("C-<menu>" . quick-goto)
+	 ("C-<f12>" . quick-goto)
+	 ("C-<XF86Tools>" . quick-goto)))
 
 (setq enable-remote-dir-locals t)
 
