@@ -126,12 +126,17 @@ strings."
          ("C-c C-n T" . org-roam-dailies-goto-today))
   :config
   (setq org-roam-directory machine:org-directory
-        org-roam-dailies-directory "daily/"
+        org-roam-dailies-directory "journals/"
+        org-roam-capture-templates
+        '(("d" "default" plain
+           "%?" :target
+           (file+head "pages/${slug}.org" "#+title: ${title}\n")
+           :unnarrowed t))
         org-roam-dailies-capture-templates
         '(("d" "default" entry
            "* %?"
-           :target (file+head "%<%Y-%m-%d>.org"
-                              "#+title: %<%Y-%m-%d>\n")))))
+           :target (file+head "%<%Y_%m_%d>.org"
+                              "#+title: %<%b %-d, %Y>\n")))))
 
 (use-package org-roam-db
   :after org-roam
