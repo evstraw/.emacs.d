@@ -45,7 +45,7 @@
   (interactive)
   (find-file (expand-file-name "init.el" user-emacs-directory)))
 
-(global-set-key "\C-cd" 'open-dotfile)
+(global-set-key (kbd "C-c d") 'open-dotfile)
 
 (let ((machine-select-file (expand-file-name "machine-select.el" modules-dir))
       (machine-select-contents
