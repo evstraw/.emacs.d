@@ -24,7 +24,12 @@
 ;; ---------------
 ;; Keep generated settings in a separate file.
 ;; ---------------
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(use-package f
+  :ensure t
+  :autoload (f-expand)
+  :functions (f-expand))
+
+(setq custom-file (f-expand "custom.el" user-emacs-directory))
 (load custom-file)
 
 (setq backup-directory-alist
@@ -32,22 +37,19 @@
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
-(defvar modules-dir
-      (expand-file-name "modules" user-emacs-directory))
-(defvar thirdparty-dir
-      (expand-file-name "thirdparty" user-emacs-directory))
-
+(defvar modules-dir (f-expand "modules" user-emacs-directory))
+(defvar thirdparty-dir (f-expand "thirdparty" user-emacs-directory))
 (add-to-list 'load-path modules-dir)
 (add-to-list 'load-path thirdparty-dir)
 
 (defun open-init-file ()
   "Opens the init.el file quickly."
   (interactive)
-  (find-file (expand-file-name "init.el" user-emacs-directory)))
+  (find-file (f-expand "init.el" user-emacs-directory)))
 
 (global-set-key (kbd "C-c d") 'open-dotfile)
 
-(let ((machine-select-file (expand-file-name "machine-select.el" modules-dir))
+(let ((machine-select-file (f-expand "machine-select.el" modules-dir))
       (machine-select-contents
        ";;; machine-select -- Allows user to specify machine for config
 ;;; Commentary:
