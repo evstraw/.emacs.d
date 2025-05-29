@@ -105,3 +105,7 @@ may be added later.\")
 ;; Return GC threshold to normal
 ;; ----------------
 (setq gc-cons-threshold 1000000)
+
+;;*  Local Variables:
+;;*  flycheck-disabled-checkers: (emacs-lisp-checkdoc)
+;;*  End:
