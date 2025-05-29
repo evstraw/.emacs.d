@@ -47,8 +47,6 @@
   (interactive)
   (find-file (f-expand "init.el" user-emacs-directory)))
 
-(global-set-key (kbd "C-c d") 'open-dotfile)
-
 (let ((machine-select-file (f-expand "machine-select.el" modules-dir))
       (machine-select-contents
        ";;; machine-select -- Allows user to specify machine for config
