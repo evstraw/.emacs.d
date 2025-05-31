@@ -29,18 +29,18 @@
 (use-package paths
   :demand t
   :load-path "modules"
-  :defines (path:modules-dir))
+  :defines (path:modules-dir
+	    path:custom-file))
 
-;; ---------------
-;; Keep generated settings in a separate file.
-;; ---------------
 (use-package f
   :ensure t
   :autoload (f-expand)
   :functions (f-expand))
 
-(setq custom-file (f-expand "custom.el" user-emacs-directory))
-(load custom-file)
+;; ---------------
+;; Keep generated settings in a separate file.
+;; ---------------
+(load (setq custom-file path:custom-file))
 
 ;; ---------------
 ;; Save backup and autosave files to /tmp.

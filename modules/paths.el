@@ -14,5 +14,7 @@
 (defconst path:modules-dir (f-expand "modules" user-emacs-directory))
 (defconst path:thirdparty-dir (f-expand "thirdparty" user-emacs-directory))
 
+(defconst path:custom-file (f-expand "custom.el" user-emacs-directory))
+
 (provide 'paths)
 ;;; paths.el ends here
