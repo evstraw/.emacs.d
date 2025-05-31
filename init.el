@@ -21,6 +21,11 @@
 (eval-when-compile
   (require 'use-package))
 
+(use-package paths
+  :demand t
+  :load-path "modules"
+  :defines (path:modules-dir))
+
 ;; ---------------
 ;; Keep generated settings in a separate file.
 ;; ---------------
@@ -40,12 +45,7 @@
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
-(defvar modules-dir (f-expand "modules" user-emacs-directory))
-(defvar thirdparty-dir (f-expand "thirdparty" user-emacs-directory))
-(add-to-list 'load-path modules-dir)
-(add-to-list 'load-path thirdparty-dir)
-
-(let ((machine-select-file (f-expand "machine-select.el" modules-dir))
+(let ((machine-select-file (f-expand "machine-select.el" path:modules-dir))
       (machine-select-contents
        ";;; machine-select -- Allows user to specify machine for config
 ;;; Commentary:
