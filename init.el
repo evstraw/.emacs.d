@@ -15,12 +15,17 @@
 ;; ----------------
 ;; Configure package sources
 ;; ----------------
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(package-initialize t)
 (eval-when-compile
   (require 'use-package))
 
+(use-package package
+  :config
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  (package-initialize t))
+
+;; ---------------
+;; Load some libraries needed for other parts of config
+;; ---------------
 (use-package paths
   :demand t
   :load-path "modules"
