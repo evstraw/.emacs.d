@@ -42,6 +42,8 @@
 ;; ---------------
 (load (setq custom-file path:custom-file))
 
+(require 'module-machine-config)
+
 ;; ---------------
 ;; Save backup and autosave files to /tmp.
 ;; ---------------
@@ -49,35 +51,6 @@
       `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
-
-(let ((machine-select-file (f-expand "machine-select.el" path:modules-dir))
-      (machine-select-contents
-       ";;; machine-select -- Allows user to specify machine for config
-;;; Commentary:
-;;; This package defines one constant, MACHINE-SELECT-MACHINE, that allows the user to specify
-;;; which machine Emacs is currently running on, and allows the configuration to make different
-;;; choices based on the current machine.  For example, my desktop has a different screen size
-;;; than my laptop, so I would like a different font size on each machine.
-;;; Note that this file SHOULD NOT be backed up to version control or synchronized between
-;;; machines, unless you want them to have the same behavior; it will be created automatically
-;;; by the configuration if it does not exist.
-
-;;; Code:
-(defconst machine-select-machine 'default
-  \"This is the current machine that Emacs is running on.
-The value of this constant may change the behavior of the
-config.  Current valid values are 'laptop and 'desktop but others
-may be added later.\")
-
-(provide 'machine-select)
-;;; machine-select.el ends here"))
-  (when (not (file-exists-p machine-select-file))
-    (message "machine-select.el does not exist, creating...")
-    (with-temp-file machine-select-file
-      (insert machine-select-contents))
-    (message "machine-select.el created, but the value of machine-select-machine\
- is not yet valid. You should visit the file and change it to a valid value."))
-  (require 'machine-select))
 
 (require 'module-appearance)
 (require 'module-git)

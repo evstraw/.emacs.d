@@ -87,10 +87,4 @@ So we need to fix this ourselves."
 ;; allow splitting narrower windows
 (setq split-width-threshold 154)
 
-;; fix font
-(require 'machine-select)
-(set-face-attribute 'default nil
-		    :height (if (eq machine-select-machine 'desktop) 105 110)
-		    :width 'normal)
-
 (provide 'module-appearance)
