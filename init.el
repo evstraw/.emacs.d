@@ -32,6 +32,9 @@
 (setq custom-file (f-expand "custom.el" user-emacs-directory))
 (load custom-file)
 
+;; ---------------
+;; Save backup and autosave files to /tmp.
+;; ---------------
 (setq backup-directory-alist
       `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
@@ -41,11 +44,6 @@
 (defvar thirdparty-dir (f-expand "thirdparty" user-emacs-directory))
 (add-to-list 'load-path modules-dir)
 (add-to-list 'load-path thirdparty-dir)
-
-(defun open-init-file ()
-  "Opens the init.el file quickly."
-  (interactive)
-  (find-file (f-expand "init.el" user-emacs-directory)))
 
 (let ((machine-select-file (f-expand "machine-select.el" modules-dir))
       (machine-select-contents
