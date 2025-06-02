@@ -19,8 +19,12 @@
 	      ("C-c RET" . lsp-execute-code-action)
 	      ("C-c C-f" . lsp-format-buffer)))
 
+(use-package paths
+  :defines (path:thirdparty-dir))
+
 (use-package jflex-mode
-  :load-path thirdparty-dir
+  :after paths
+  :load-path path:thirdparty-dir
   :mode "\\.jflex\\'")
 
 (use-package flycheck

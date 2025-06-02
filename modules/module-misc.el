@@ -37,6 +37,11 @@
 (use-package dired
   :config (setq dired-dwim-target t))
 
+(defun open-init-file ()
+  "Opens the init.el file quickly."
+  (interactive)
+  (find-file (f-expand "init.el" user-emacs-directory)))
+
 (use-package transient
   :init
   (defun find-code-dir ()

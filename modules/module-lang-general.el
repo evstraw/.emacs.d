@@ -115,6 +115,8 @@
   :hook (compilation-filter . colorize-compilation-buffer))
 
 (use-package flycheck
+  :config
+  (setq-default flycheck-emacs-lisp-load-path 'inherit)
   :hook (prog-mode . flycheck-mode))
 
 (provide 'module-lang-general)

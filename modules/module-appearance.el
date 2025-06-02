@@ -2,6 +2,8 @@
 ;; Configure themes
 ;; -----------------
 
+(setq frame-resize-pixelwise t)
+
 (defvar dark-theme 'doom-outrun-electric "The theme to use when in dark mode.")
 (defvar light-theme 'doom-acario-light "The theme to use when not in dark mode.")
 
