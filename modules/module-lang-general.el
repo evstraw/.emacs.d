@@ -18,7 +18,7 @@
   (setq lsp-keymap-prefix "M-l")
   :commands (lsp)
   :bind (:map lsp-mode-map
-			  ("C-c C-r" . lsp-rename))
+	      ("C-c C-r" . lsp-rename))
   :config
   (setq lsp-file-watch-threshold 3000)
   (setq read-process-output-max (* 1024 1024))
@@ -61,7 +61,8 @@
   :config
   (require 'smartparens-config)
   (smartparens-global-mode)
-  (sp-with-modes '(java-mode c++-mode c-mode go-mode groovy-mode arduino-mode)
+  (sp-with-modes '(java-mode c++-mode c-mode go-mode
+		   groovy-mode arduino-mode rustic-mode rust-mode)
     (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
     (sp-local-pair "/**" "*/" :post-handlers '(("| " "SPC")
      					       (" ||\n[i]" "RET")))
@@ -106,12 +107,12 @@
 (use-package realgud
   :commands (realgud:gdb))
 
-(require 'ansi-color)
-(defun colorize-compilation-buffer ()
-  (toggle-read-only)
-  (ansi-color-apply-on-region compilation-filter-start (point))
-  (toggle-read-only))
-(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
+(use-package ansi-color
+  :config
+  (defun colorize-compilation-buffer ()
+    (let ((inhibit-read-only t))
+      (ansi-color-apply-on-region compilation-filter-start (point))))
+  :hook (compilation-filter . colorize-compilation-buffer))
 
 (use-package flycheck
   :hook (prog-mode . flycheck-mode))
