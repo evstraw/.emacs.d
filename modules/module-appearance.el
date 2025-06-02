@@ -73,6 +73,7 @@ So we need to fix this ourselves."
   (setq doom-modeline-buffer-file-name-style 'file-name)
   (doom-modeline-mode)
   (doom-modeline-daemon)
+  (doom-themes-visual-bell-config)
   :after (doom-themes nerd-icons))
 
 (use-package org
