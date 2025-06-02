@@ -70,7 +70,8 @@ Intended as :around advice for `org-agenda-list'."
                           #'org-refile)))
 
   (add-to-list 'org-export-backends 'md)
-  (setq org-directory machine:org-directory
+  (setq org-startup-with-inline-images t
+        org-directory machine:org-directory
         org-default-notes-file (expand-file-name "general.org" org-directory))
   (let ((scale 1.5))
     (setq org-format-latex-options
