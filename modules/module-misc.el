@@ -74,7 +74,7 @@
 	  (find-file (file-truename (buffer-file-name)))
 	(message "Buffer is not visiting a file!"))))
   :config
-  (define-transient-command quick-goto ()
+  (transient-define-prefix quick-goto ()
     "Quickly runs a command from a popup window."
     ["Common directories and files"
      ("c" "Open code directory" find-code-dir)
