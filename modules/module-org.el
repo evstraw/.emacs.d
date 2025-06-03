@@ -120,9 +120,18 @@ strings."
 (use-package org-roam
   :after org
   :bind (("C-c C-n f" . org-roam-node-find)
-	 ("C-c C-n i" . org-roam-node-insert))
+         ("C-c C-n i" . org-roam-node-insert)
+         ("C-c C-n b" . org-roam-buffer-toggle)
+         ("C-c C-n t" . org-roam-dailies-capture-today)
+         ("C-c C-n T" . org-roam-dailies-goto-today))
   :config
-  (setq org-roam-directory machine:org-directory))
+  (setq org-roam-directory machine:org-directory
+        org-roam-dailies-directory "daily/"
+        org-roam-dailies-capture-templates
+        '(("d" "default" entry
+           "* %?"
+           :target (file+head "%<%Y-%m-%d>.org"
+                              "#+title: %<%Y-%m-%d>\n")))))
 
 (use-package org-roam-db
   :after org-roam
