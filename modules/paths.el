@@ -11,6 +11,9 @@
   :ensure t
   :functions (f-expand))
 
+(defconst path:user-home-directory (getenv "HOME")
+  "The user's home directory (~).")
+
 (defconst path:modules-dir (f-expand "modules" user-emacs-directory))
 (defconst path:thirdparty-dir (f-expand "thirdparty" user-emacs-directory))
 
