@@ -1,3 +1,8 @@
+(use-package f
+  :ensure t
+  :functions (f-expand)
+  :autoload (f-expand))
+
 (defun org-get-agenda-file-buffers ()
   "Return all open agenda file buffers."
   (mapcar (lambda (file)
@@ -50,7 +55,7 @@ strings."
     (interactive)
     (setq org-agenda-files
 	  (append
-	   (org-agenda-search-directory "~/Documents/notes")))
+	   (org-agenda-search-directory machine:org-directory)))
     (setq recentf-exclude (org-agenda-files)))
   (org-agenda-refresh-files-list)
   
@@ -61,7 +66,7 @@ strings."
 (use-package org
   :config
   (add-to-list 'org-export-backends 'md)
-  (setq org-directory "~/Documents/notes/"
+  (setq org-directory machine:org-directory
 	org-default-notes-file (expand-file-name "general.org" org-directory))
   (let ((scale 1.5))
     (setq org-format-latex-options
