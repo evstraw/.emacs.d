@@ -62,10 +62,7 @@ strings."
 (use-package org
   :config
   (add-to-list 'org-export-backends 'md)
-  (require 'org-habit)
-  (setq org-habit-graph-column 55
-	org-habit-show-habits-only-for-today nil
-	org-directory "~/Documents/notes/"
+  (setq org-directory "~/Documents/notes/"
 	org-default-notes-file (expand-file-name "general.org" org-directory))
   (let ((scale 1.5))
     (setq org-format-latex-options
@@ -91,6 +88,12 @@ strings."
 	 (org-mode . company-mode))
   :bind (:map org-mode-map
 	 ("C-x w" . org-refile)))
+
+(use-package org-habit
+  :after org
+  :config
+  (setq org-habit-graph-column 55
+	org-habit-show-habits-only-for-today nil))
 
 (use-package org-capture
   :after org
