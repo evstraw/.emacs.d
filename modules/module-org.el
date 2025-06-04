@@ -83,6 +83,19 @@ strings."
   ;; Below is needed to apply the modified `org-emphasis-regexp-components'
   ;; settings from above.
   (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
+  (setq org-refile-targets
+	'((nil :maxlevel . 3)
+          (org-agenda-files :maxlevel . 3)))
+  :hook ((org-mode . auto-fill-mode)
+	 (org-mode . org-indent-mode)
+	 (org-mode . company-mode))
+  :bind (:map org-mode-map
+	 ("C-x w" . org-refile)))
+
+(use-package org-capture
+  :after org
+  :bind (("C-x c" . org-capture))
+  :config
   (setq org-capture-templates
 	'(("n" "Quick Note" entry
 	   (file+headline org-default-notes-file "General Notes")
@@ -92,16 +105,7 @@ strings."
 	   "* TODO [#B] %?\n %i\n " :empty-lines 1 :kill-buffer t)
 	  ("s" "Shopping list item" item
 	   (file+olp org-default-notes-file "Shopping List" "Unspecified Store")
-	   "- %?%i")))
-  (setq org-refile-targets
-	'((nil :maxlevel . 3)
-          (org-agenda-files :maxlevel . 3)))
-  :hook ((org-mode . auto-fill-mode)
-	 (org-mode . org-indent-mode)
-	 (org-mode . company-mode))
-  :bind (("C-x c" . org-capture)
-	 :map org-mode-map
-	 ("C-x w" . org-refile)))
+	   "- %?%i"))))
 
 (use-package org-roam
   :after org
