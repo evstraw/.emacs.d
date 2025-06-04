@@ -63,17 +63,9 @@ of a light theme."
   :defer t)
 
 (use-package doom-modeline
-  :init
-  (defun doom-modeline-daemon (&optional frame)
-    "`doom-modeline' strangely does not behave in a daemon-session.
-So we need to fix this ourselves."
-    (setq doom-modeline-icon t)
-    (setq doom-modeline-height 30))
-  (add-hook 'after-make-frame-functions #'doom-modeline-daemon)
   :config
   (setq doom-modeline-buffer-file-name-style 'file-name)
   (doom-modeline-mode)
-  (doom-modeline-daemon)
   (doom-themes-visual-bell-config)
   :after (doom-themes nerd-icons))
 
