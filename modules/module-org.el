@@ -50,8 +50,7 @@ strings."
     (interactive)
     (setq org-agenda-files
 	  (append
-	   (org-agenda-search-directory "~/Documents/notes")
-	   (org-agenda-search-directory "~/Documents/school/current")))
+	   (org-agenda-search-directory "~/Documents/notes")))
     (setq recentf-exclude (org-agenda-files)))
   (org-agenda-refresh-files-list)
   
@@ -67,13 +66,6 @@ strings."
   (let ((scale 1.5))
     (setq org-format-latex-options
 	  (plist-put (plist-put org-format-latex-options :html-scale scale) :scale scale)))
-  (setq org-tag-persistent-alist
-	'((:startgroup . nil)
-	  ("class" . ?c)
-	  ("homework" . ?h)
-	  ("project" . ?p)
-	  ("event" . ?e)
-	  (:endgroup . nil)))
   ;; Allow multiple line Org emphasis markup.
   ;; http://emacs.stackexchange.com/a/13828/115
   (setcar (nthcdr 4 org-emphasis-regexp-components) 20) ;Up to 20 lines, default is just 1
