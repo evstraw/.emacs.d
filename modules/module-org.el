@@ -112,6 +112,7 @@ strings."
   :bind (("C-x C-n f" . org-roam-node-find)
 	 ("C-x C-n i" . org-roam-node-insert))
   :custom (org-roam-directory (expand-file-name "roam" org-directory))
-  :config (org-roam-db-autosync-mode))
+  :config (use-package org-roam-db
+	    :config (org-roam-db-autosync-mode)))
 
 (provide 'module-org)
