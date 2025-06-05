@@ -109,8 +109,8 @@ strings."
 
 (use-package org-roam
   :after org
-  :bind (("C-x C-n f" . org-roam-node-find)
-	 ("C-x C-n i" . org-roam-node-insert))
+  :bind (("C-c C-n f" . org-roam-node-find)
+	 ("C-c C-n i" . org-roam-node-insert))
   :custom (org-roam-directory (expand-file-name "roam" org-directory))
   :config (use-package org-roam-db
 	    :config (org-roam-db-autosync-mode)))
