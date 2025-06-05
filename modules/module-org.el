@@ -3,6 +3,9 @@
   :functions (f-expand)
   :autoload (f-expand))
 
+(use-package module-machine-config
+  :defines (machine:org-directory))
+
 (defun org-get-agenda-file-buffers ()
   "Return all open agenda file buffers."
   (mapcar (lambda (file)
@@ -111,8 +114,9 @@ strings."
   :after org
   :bind (("C-c C-n f" . org-roam-node-find)
 	 ("C-c C-n i" . org-roam-node-insert))
-  :custom (org-roam-directory (expand-file-name "roam" org-directory))
-  :config (use-package org-roam-db
-	    :config (org-roam-db-autosync-mode)))
+  :config
+  (setq org-roam-directory machine:org-directory)
+  (use-package org-roam-db
+    :config (org-roam-db-autosync-mode)))
 
 (provide 'module-org)
