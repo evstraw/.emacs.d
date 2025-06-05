@@ -110,13 +110,22 @@ strings."
 	   (file+olp org-default-notes-file "Shopping List" "Unspecified Store")
 	   "- %?%i"))))
 
+(use-package org-roam-dailies
+  :after org-roam
+  :commands (org-roam-dailies-capture-today
+             org-roam-dailies-goto-today)
+  :defines (org-roam-dailies-directory
+            org-roam-dailies-capture-templates))
+
 (use-package org-roam
   :after org
   :bind (("C-c C-n f" . org-roam-node-find)
 	 ("C-c C-n i" . org-roam-node-insert))
   :config
-  (setq org-roam-directory machine:org-directory)
-  (use-package org-roam-db
-    :config (org-roam-db-autosync-mode)))
+  (setq org-roam-directory machine:org-directory))
+
+(use-package org-roam-db
+  :after org-roam
+  :config (org-roam-db-autosync-mode))
 
 (provide 'module-org)
