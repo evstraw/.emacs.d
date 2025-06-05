@@ -15,11 +15,12 @@
 
 (use-package initsplit
   :functions (initsplit-load)
-  :demand t
+  :ensure t
   :config
   (setq initsplit-customizations-alist
 	`(("^machine:.*" ,path:machine-config-file
-	   "^default$" ,path:machine-config-file))))
+	   "^default$" ,path:machine-config-file)))
+  :hook (after-init . (lambda () (mapc #'initsplit-load initsplit-customizations-alist))))
 
 (defgroup machine nil
   "Group for machine-specific settings."
@@ -29,8 +30,6 @@
   "Base directory for Org-Mode files containing notes on this machine."
   :type 'directory
   :group 'machine)
-
-(mapc #'initsplit-load initsplit-customizations-alist)
 
 ;;; module-machine-config.el ends here
 (provide 'module-machine-config)
