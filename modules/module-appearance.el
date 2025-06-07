@@ -34,14 +34,11 @@ of a light theme."
 (push '("\\`\\*e?shell" display-buffer-pop-up-window) display-buffer-alist)
 
 (use-package dashboard
-  :init
-  (global-unset-key (kbd "C-x C-n"))
   :config
   (dashboard-setup-startup-hook)
   (setq dashboard-center-content t)
   (setq dashboard-items '((recents  . 10)
-                          (projects . 10)
-                          (agenda . 7))))
+                          (projects . 10))))
 
 (use-package doom-themes
   :config
@@ -64,17 +61,9 @@ of a light theme."
   :defer t)
 
 (use-package doom-modeline
-  :init
-  (defun doom-modeline-daemon (&optional frame)
-    "`doom-modeline' strangely does not behave in a daemon-session.
-So we need to fix this ourselves."
-    (setq doom-modeline-icon t)
-    (setq doom-modeline-height 30))
-  (add-hook 'after-make-frame-functions #'doom-modeline-daemon)
   :config
   (setq doom-modeline-buffer-file-name-style 'file-name)
   (doom-modeline-mode)
-  (doom-modeline-daemon)
   (doom-themes-visual-bell-config)
   :after (doom-themes nerd-icons))
 

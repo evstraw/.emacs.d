@@ -1,3 +1,11 @@
+(use-package f
+  :ensure t
+  :functions (f-expand)
+  :autoload (f-expand))
+
+(use-package module-machine-config
+  :defines (machine:org-directory))
+
 (defun org-get-agenda-file-buffers ()
   "Return all open agenda file buffers."
   (mapcar (lambda (file)
@@ -50,8 +58,7 @@ strings."
     (interactive)
     (setq org-agenda-files
 	  (append
-	   (org-agenda-search-directory "~/Documents/notes")
-	   (org-agenda-search-directory "~/Documents/school/current")))
+	   (org-agenda-search-directory machine:org-directory)))
     (setq recentf-exclude (org-agenda-files)))
   (org-agenda-refresh-files-list)
   
@@ -62,27 +69,36 @@ strings."
 (use-package org
   :config
   (add-to-list 'org-export-backends 'md)
-  (require 'org-habit)
-  (setq org-habit-graph-column 55
-	org-habit-show-habits-only-for-today nil
-	org-directory "~/Documents/notes/"
+  (setq org-directory machine:org-directory
 	org-default-notes-file (expand-file-name "general.org" org-directory))
   (let ((scale 1.5))
     (setq org-format-latex-options
 	  (plist-put (plist-put org-format-latex-options :html-scale scale) :scale scale)))
-  (setq org-tag-persistent-alist
-	'((:startgroup . nil)
-	  ("class" . ?c)
-	  ("homework" . ?h)
-	  ("project" . ?p)
-	  ("event" . ?e)
-	  (:endgroup . nil)))
   ;; Allow multiple line Org emphasis markup.
   ;; http://emacs.stackexchange.com/a/13828/115
   (setcar (nthcdr 4 org-emphasis-regexp-components) 20) ;Up to 20 lines, default is just 1
   ;; Below is needed to apply the modified `org-emphasis-regexp-components'
   ;; settings from above.
   (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
+  (setq org-refile-targets
+	'((nil :maxlevel . 3)
+          (org-agenda-files :maxlevel . 3)))
+  :hook ((org-mode . auto-fill-mode)
+	 (org-mode . org-indent-mode)
+	 (org-mode . company-mode))
+  :bind (:map org-mode-map
+	 ("C-x w" . org-refile)))
+
+(use-package org-habit
+  :after org
+  :config
+  (setq org-habit-graph-column 55
+	org-habit-show-habits-only-for-today nil))
+
+(use-package org-capture
+  :after org
+  :bind (("C-x c" . org-capture))
+  :config
   (setq org-capture-templates
 	'(("n" "Quick Note" entry
 	   (file+headline org-default-notes-file "General Notes")
@@ -92,22 +108,38 @@ strings."
 	   "* TODO [#B] %?\n %i\n " :empty-lines 1 :kill-buffer t)
 	  ("s" "Shopping list item" item
 	   (file+olp org-default-notes-file "Shopping List" "Unspecified Store")
-	   "- %?%i")))
-  (setq org-refile-targets
-	'((nil :maxlevel . 3)
-          (org-agenda-files :maxlevel . 3)))
-  :hook ((org-mode . auto-fill-mode)
-	 (org-mode . org-indent-mode)
-	 (org-mode . company-mode))
-  :bind (("C-x c" . org-capture)
-	 :map org-mode-map
-	 ("C-x w" . org-refile)))
+	   "- %?%i"))))
+
+(use-package org-roam-dailies
+  :after org-roam
+  :commands (org-roam-dailies-capture-today
+             org-roam-dailies-goto-today)
+  :defines (org-roam-dailies-directory
+            org-roam-dailies-capture-templates))
 
 (use-package org-roam
   :after org
-  :bind (("C-x C-n f" . org-roam-node-find)
-	 ("C-x C-n i" . org-roam-node-insert))
-  :custom (org-roam-directory (expand-file-name "roam" org-directory))
+  :bind (("C-c C-n f" . org-roam-node-find)
+         ("C-c C-n i" . org-roam-node-insert)
+         ("C-c C-n b" . org-roam-buffer-toggle)
+         ("C-c C-n t" . org-roam-dailies-capture-today)
+         ("C-c C-n T" . org-roam-dailies-goto-today))
+  :config
+  (setq org-roam-directory machine:org-directory
+        org-roam-dailies-directory "journals/"
+        org-roam-capture-templates
+        '(("d" "default" plain
+           "%?" :target
+           (file+head "pages/${slug}.org" "#+title: ${title}\n")
+           :unnarrowed t))
+        org-roam-dailies-capture-templates
+        '(("d" "default" entry
+           "* %?"
+           :target (file+head "%<%Y_%m_%d>.org"
+                              "#+title: %<%b %-d, %Y>\n")))))
+
+(use-package org-roam-db
+  :after org-roam
   :config (org-roam-db-autosync-mode))
 
 (provide 'module-org)

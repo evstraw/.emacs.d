@@ -130,7 +130,10 @@
 (global-set-key (kbd "C-x 6") #'toggle-window-split)
 
 (use-package esup
-  :commands (esup))
-  ;;*  :config (setq esup-depth 0))
+  :commands (esup)
+  :config
+  ;; Fixes a bug that occurs when trying to fontify results, see
+  ;; https://www.reddit.com/r/emacs/comments/13jh7gk/comment/jkf225g/
+  (setq esup-depth 0))
   
 (provide 'module-misc)
