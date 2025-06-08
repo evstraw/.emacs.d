@@ -109,6 +109,7 @@
     (setq tramp-remote-process-environment process-environment)))
 
 (global-set-key (kbd "C-x <f5>") #'revert-buffer)
+(global-set-key (kbd "s-u") #'revert-buffer)
 
 (defun toggle-window-split ()
   (interactive)
