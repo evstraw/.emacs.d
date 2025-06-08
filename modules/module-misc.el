@@ -42,6 +42,9 @@
   (interactive)
   (find-file (f-expand "init.el" user-emacs-directory)))
 
+(use-package module-machine-config
+  :defines (machine:org-directory))
+
 (use-package transient
   :init
   (defun find-code-dir ()
@@ -52,7 +55,7 @@
     (find-file "~/Documents/school/"))
   (defun find-notes-dir ()
     (interactive)
-    (find-file "~/Documents/notes/"))
+    (find-file machine:org-directory))
   (defun find-robotics-dir ()
 	(interactive)
 	(find-file "~/Sync/code/robotics/"))
