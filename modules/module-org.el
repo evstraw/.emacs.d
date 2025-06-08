@@ -129,6 +129,10 @@ Intended as :around advice for `org-agenda-list'."
   :defines (org-roam-dailies-directory
             org-roam-dailies-capture-templates))
 
+(use-package org-roam-db
+  :after org-roam
+  :commands (org-roam-db-autosync-mode))
+
 (use-package org-roam
   :bind* ( :prefix-map my/org-roam-quick-map
            :prefix "C-x C-n"
@@ -149,10 +153,7 @@ Intended as :around advice for `org-agenda-list'."
         '(("d" "default" entry
            "* %?"
            :target (file+head "%<%Y_%m_%d>.org"
-                              "#+title: %<%b %-d, %Y>\n")))))
-
-(use-package org-roam-db
-  :after org-roam
-  :config (org-roam-db-autosync-mode))
+                              "#+title: %<%b %-d, %Y>\n"))))
+  (org-roam-db-autosync-mode))
 
 (provide 'module-org)
