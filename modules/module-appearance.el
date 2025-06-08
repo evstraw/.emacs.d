@@ -4,8 +4,6 @@
 
 (setq frame-resize-pixelwise t)
 
-(declare-function doom-themes-init (buffer-file-name))
-
 ;; Display shell/eshell buffers in a new window instead of in the same window
 (push '("\\`\\*e?shell" display-buffer-pop-up-window) display-buffer-alist)
 
@@ -17,13 +15,13 @@
                           (projects . 10))))
 
 (use-package doom-themes
+  :autoload (doom-themes-visual-bell-config
+	     doom-themes-org-config)
   :config
   (setq doom-themes-enable-bold t      ; If nil, bold is universally disabled
 	doom-themes-enable-italic t)   ; If nil, italics is universally disabled
-  (defun doom-themes-init ()
-    (doom-themes-visual-bell-config)
-    (doom-themes-org-config))
-  (doom-themes-init))
+  (doom-themes-visual-bell-config)
+  (doom-themes-org-config))
 
 (use-package nerd-icons
   :after (doom-themes)
