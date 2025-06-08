@@ -4,31 +4,7 @@
 
 (setq frame-resize-pixelwise t)
 
-(defvar dark-theme 'doom-outrun-electric "The theme to use when in dark mode.")
-(defvar light-theme 'doom-acario-light "The theme to use when not in dark mode.")
-
-(defcustom use-dark-mode t
-  "Whether or not 'dark mode' should be activated, which uses a dark theme instead
-of a light theme."
-  :type '(boolean))
-
 (declare-function doom-themes-init (buffer-file-name))
-
-(defun dark-mode-on ()
-  (interactive)
-  (customize-save-variable 'use-dark-mode t)
-  (doom-themes-init))
-
-(defun dark-mode-off ()
-  (interactive)
-  (customize-save-variable 'use-dark-mode nil)
-  (doom-themes-init))
-
-(defun dark-mode-toggle ()
-  (interactive)
-  (if use-dark-mode
-      (dark-mode-off)
-    (dark-mode-on)))
 
 ;; Display shell/eshell buffers in a new window instead of in the same window
 (push '("\\`\\*e?shell" display-buffer-pop-up-window) display-buffer-alist)
@@ -45,9 +21,6 @@ of a light theme."
   (setq doom-themes-enable-bold t      ; If nil, bold is universally disabled
 	doom-themes-enable-italic t)   ; If nil, italics is universally disabled
   (defun doom-themes-init ()
-    (if use-dark-mode
-	(load-theme dark-theme t)
-      (load-theme light-theme t))
     (doom-themes-visual-bell-config)
     (doom-themes-org-config))
   (doom-themes-init))
