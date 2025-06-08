@@ -6,42 +6,35 @@
 (use-package module-machine-config
   :defines (machine:org-directory))
 
-(defun org-get-agenda-file-buffers ()
-  "Return all open agenda file buffers."
-  (mapcar (lambda (file)
-            (org-get-agenda-file-buffer file))
-          org-agenda-files))
-
-(defun org-agenda-revert-all ()
-  "Reverts all Org buffers used for the Org agenda, reloading them from disk."
-  (interactive)
-  (mapcar (lambda (buf)
-        (with-current-buffer buf
-          (revert-buffer t t)))
-      (org-get-agenda-file-buffers)))
-
-(defun org-agenda-redo-or-revert (&optional revert)
-  "Rebuild all agenda views in the current buffer.
-With a prefix argument (REVERT), revert all agenda buffers before
-doing so."
-  (interactive "P")
-  (if revert
-      (progn
-    (org-agenda-revert-all)
-    (org-agenda-redo-all))
-    (org-agenda-redo-all)))
-
-(defun my/org-agenda-list-exclude-tags-advice (orig-fn &rest args)
-  "Exclude selected tags from `org-agenda-list'.
-Intended as :around advice for `org-agenda-list'."
-  (let ((org-agenda-tag-filter-preset '("-noagenda")))
-    (apply orig-fn args)))
-
 (use-package org-agenda
-  :commands (org-agenda)
+  :commands (org-agenda
+	     org-agenda-redo-all)
   :bind (:map org-agenda-mode-map
           ("g" . org-agenda-redo-or-revert))
   :config
+  (defun org-get-agenda-file-buffers ()
+    "Return all open agenda file buffers."
+    (mapcar #'org-get-agenda-file-buffer org-agenda-files))
+
+  (defun org-agenda-revert-all ()
+    "Reverts all Org buffers used for the Org agenda, reloading them from disk."
+    (interactive)
+    (mapcar (lambda (buf)
+	      (with-current-buffer buf
+		(revert-buffer t t)))
+	    (org-get-agenda-file-buffers)))
+
+  (defun org-agenda-redo-or-revert (&optional revert)
+    "Rebuild all agenda views in the current buffer.
+With a prefix argument (REVERT), revert all agenda buffers before
+doing so."
+    (interactive "P")
+    (if revert
+	(progn
+	  (org-agenda-revert-all)
+	  (org-agenda-redo-all))
+      (org-agenda-redo-all)))
+
   (defun org-agenda-search-directory (dir)
     "Recursively searches the given DIR and all subdirectories
 for org agenda files that match `org-agenda-file-regexp' and
@@ -53,7 +46,13 @@ strings."
       (error "Argument %s does not refer to an existing directory" dir))
       (error "Invalid argument %s in org-agenda-search-directory, string required" dir)))
 
+  (defun my/org-agenda-list-exclude-tags-advice (orig-fn &rest args)
+    "Exclude selected tags from `org-agenda-list'.
+Intended as :around advice for `org-agenda-list'."
+    (let ((org-agenda-tag-filter-preset '("-noagenda")))
+      (apply orig-fn args)))
   (advice-add #'org-agenda-list :around #'my/org-agenda-list-exclude-tags-advice)
+
   (defun org-agenda-refresh-files-list ()
     (interactive)
     (setq org-agenda-files
