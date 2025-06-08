@@ -6,9 +6,18 @@
 (use-package module-machine-config
   :defines (machine:org-directory))
 
+(use-package recentf
+  :defines (recentf-exclude))
+
 (use-package org-agenda
   :commands (org-agenda
-	     org-agenda-redo-all)
+	     org-agenda-redo-all
+	     org-agenda-revert-all
+	     org-agenda-redo-or-revert
+	     org-agenda-refresh-files-list)
+  :functions (org-get-agenda-file-buffers
+	      org-agenda-search-directory
+	      my/org-agenda-list-exclude-tags-advice)
   :bind (:map org-agenda-mode-map
           ("g" . org-agenda-redo-or-revert))
   :config
@@ -66,6 +75,9 @@ Intended as :around advice for `org-agenda-list'."
     org-columns-default-format "%ITEM %TODO %3PRIORITY %CLOCKSUM(Time) %Effort{:} %TAGS"))
 
 (use-package org
+  :functions (org-get-agenda-file-buffer
+	      org-set-emph-re
+	      org-agenda-files)
   :config
   (add-to-list 'org-export-backends 'md)
   (setq org-directory machine:org-directory

@@ -15,6 +15,7 @@
 
 (use-package initsplit
   :functions (initsplit-load)
+  :autoload (initsplit-load)
   :ensure t
   :config
   (setq initsplit-customizations-alist
