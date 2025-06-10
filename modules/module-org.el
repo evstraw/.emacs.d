@@ -118,7 +118,6 @@ strings."
             org-roam-dailies-capture-templates))
 
 (use-package org-roam
-  :after org
   :bind* (:prefix-map my/org-roam-quick-map
           :prefix "C-x C-n"
           ("f" . org-roam-node-find)
