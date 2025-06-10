@@ -95,6 +95,19 @@ strings."
   (setq org-habit-graph-column 55
     org-habit-show-habits-only-for-today nil))
 
+(use-package org-clock
+  :after org
+  :functions (org-clocking-p)
+  :commands (org-clock-out
+             org-clock-in-last)
+  :config
+  (defun my/org-clock-toggle ()
+    (interactive)
+    (if (org-clocking-p)
+        (call-interactively #'org-clock-out)
+      (call-interactively #'org-clock-in-last)))
+  :bind (("S-<f15>" . my/org-clock-toggle)))
+
 (use-package org-capture
   :after org
   :bind (("C-x c" . org-capture))
