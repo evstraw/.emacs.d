@@ -106,6 +106,7 @@
   :commands (realgud:gdb))
 
 (use-package ansi-color
+  :functions (ansi-color-apply-on-region)
   :config
   (defun colorize-compilation-buffer ()
     (let ((inhibit-read-only t))
