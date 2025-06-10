@@ -99,7 +99,8 @@ This can be useful in situations where you have a symbolically
      ("d" "Open dotfile" find-dotfiles)]
     ["Common commands"
      ("a" "Org Agenda" org-agenda)
-     ("f" "Visit linked file" visit-file-truename)])
+     ("f" "Visit linked file" visit-file-truename)
+     ("o" "Other Org shortcut commands" my/org-shortcuts)])
   :bind (("C-<menu>" . quick-goto)
 	 ("C-<f12>" . quick-goto)
 	 ("C-<XF86Tools>" . quick-goto)))

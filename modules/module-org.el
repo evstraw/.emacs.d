@@ -88,7 +88,8 @@ Intended as :around advice for `org-agenda-list'."
   :after org
   :functions (org-clocking-p)
   :commands (org-clock-out
-             org-clock-in-last)
+             org-clock-in-last
+             my/org-clock-toggle)
   :config
   (defun my/org-clock-toggle ()
     (interactive)
@@ -96,6 +97,22 @@ Intended as :around advice for `org-agenda-list'."
         (call-interactively #'org-clock-out)
       (call-interactively #'org-clock-in-last)))
   :bind (("S-<f15>" . my/org-clock-toggle)))
+
+(use-package transient
+  :ensure t
+  :commands (my/org-shortcuts)
+  :config
+  (transient-define-prefix my/org-shortcuts ()
+    "Quickly runs an Org-related command from a popup window."
+    ["Agenda"
+     ("a" "Org agenda" org-agenda)]
+    ["Clocks/Tasks"
+     ("i" "Clock in to task at point" org-clock-in)
+     ("I" "Clock in to last task" org-clock-in-last)
+     ("o" "Clock out of current task" org-clock-out)
+     ("j" "Jump to current/most recent task" org-clock-goto)
+     ("t" "Toggle between clocking out/clocking into last task"
+      my/org-clock-toggle)]))
 
 (use-package org-capture
   :after org
