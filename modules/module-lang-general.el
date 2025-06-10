@@ -18,7 +18,7 @@
   (setq lsp-keymap-prefix "M-l")
   :commands (lsp)
   :bind (:map lsp-mode-map
-	      ("C-c C-r" . lsp-rename))
+          ("C-c C-r" . lsp-rename))
   :config
   (setq lsp-file-watch-threshold 3000)
   (setq read-process-output-max (* 1024 1024))
@@ -39,7 +39,7 @@
       (yas-minor-mode-on)))
   :commands (yas-minor-mode)
   :hook ((prog-mode . yas-minor-mode)
-	 (text-mode . yas-commit-editmsg)))
+     (text-mode . yas-commit-editmsg)))
 
 (use-package company
   :commands (company-mode)
@@ -48,10 +48,10 @@
   (delete 'company-clang company-backends)
   :hook (prog-mode . company-mode)
   :bind (:map company-active-map
-	      ("M-n" . nil)
-	      ("M-p" . nil)
-	      ("C-n" . company-select-next)
-	      ("C-p" . company-select-previous)))
+          ("M-n" . nil)
+          ("M-p" . nil)
+          ("C-n" . company-select-next)
+          ("C-p" . company-select-previous)))
 
 (use-package company-quickhelp
   :after (company)
@@ -62,18 +62,18 @@
   (require 'smartparens-config)
   (smartparens-global-mode)
   (sp-with-modes '(java-mode c++-mode c-mode go-mode
-		   groovy-mode arduino-mode rustic-mode rust-mode)
+                   groovy-mode arduino-mode rustic-mode rust-mode)
     (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
     (sp-local-pair "/**" "*/" :post-handlers '(("| " "SPC")
-     					       (" ||\n[i]" "RET")))
+                                               (" ||\n[i]" "RET")))
     (sp-local-pair "'" "'"))
   (sp-with-modes '(css-mode js2-mode js-mode)
     (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
     (sp-local-pair "/**" "*/" :post-handlers '(("| " "SPC")
-     					       (" ||\n[i]" "RET"))))
+                                               (" ||\n[i]" "RET"))))
   (sp-with-modes '(tuareg-mode utop-mode)
     (sp-local-pair "(*" "*)" :post-handlers '(("| " "SPC")
-					      (" ||\n[i]" "RET")))))
+                                              (" ||\n[i]" "RET")))))
 
 ;; ---------------
 ;; Generic configuration for all languages
