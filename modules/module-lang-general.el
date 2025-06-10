@@ -98,12 +98,15 @@
   :commands (gradle-mode)
   :hook prog-mode)
 
-(add-hook 'prog-mode-hook
-	  #'(lambda ()
-	      (display-line-numbers-mode)
-	      (auto-fill-mode)
-	      (setq fill-column 95)
-	      (display-fill-column-indicator-mode)))
+(use-package simple
+  :config (setq-default fill-column 95)
+  :hook (prog-mode . auto-fill-mode))
+
+(use-package display-line-numbers
+  :hook (prog-mode . display-line-numbers-mode))
+
+(use-package display-fill-column-indicator
+  :hook (prog-mode . display-fill-column-indicator-mode))
 
 (use-package realgud
   :commands (realgud:gdb))
