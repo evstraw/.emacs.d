@@ -119,11 +119,13 @@ strings."
 
 (use-package org-roam
   :after org
-  :bind (("C-c C-n f" . org-roam-node-find)
-         ("C-c C-n i" . org-roam-node-insert)
-         ("C-c C-n b" . org-roam-buffer-toggle)
-         ("C-c C-n t" . org-roam-dailies-capture-today)
-         ("C-c C-n T" . org-roam-dailies-goto-today))
+  :bind* (:prefix-map my/org-roam-quick-map
+          :prefix "C-c C-n"
+          ("f" . org-roam-node-find)
+          ("i" . org-roam-node-insert)
+          ("b" . org-roam-buffer-toggle)
+          ("t" . org-roam-dailies-capture-today)
+          ("T" . org-roam-dailies-goto-today))
   :config
   (setq org-roam-directory machine:org-directory
         org-roam-dailies-directory "journals/"
