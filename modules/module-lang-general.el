@@ -79,13 +79,6 @@
 ;; Generic configuration for all languages
 ;; ---------------
 
-;;*  (use-package column-enforce-mode
-;;*    :commands (column-enforce-mode)
-;;*    :ensure t
-;;*    :config
-;;*    (setq column-enforce-column 95)
-;;*    :hook prog-mode)
-
 (global-hl-line-mode)
 (column-number-mode)
 
