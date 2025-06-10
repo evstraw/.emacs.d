@@ -120,7 +120,7 @@ strings."
 (use-package org-roam
   :after org
   :bind* (:prefix-map my/org-roam-quick-map
-          :prefix "C-c C-n"
+          :prefix "C-x C-n"
           ("f" . org-roam-node-find)
           ("i" . org-roam-node-insert)
           ("b" . org-roam-buffer-toggle)
