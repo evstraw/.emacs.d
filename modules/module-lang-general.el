@@ -99,7 +99,7 @@
   :hook prog-mode)
 
 (use-package simple
-  :config (setq-default fill-column 95)
+  :config (setq-default fill-column 85)
   :hook (prog-mode . auto-fill-mode))
 
 (use-package display-line-numbers
