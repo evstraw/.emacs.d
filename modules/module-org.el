@@ -11,14 +11,14 @@
 
 (use-package org-agenda
   :commands (org-agenda
-	     org-agenda-redo-all
-	     org-agenda-revert-all
-	     org-agenda-redo-or-revert
-	     org-agenda-refresh-files-list)
+             org-agenda-redo-all
+             org-agenda-revert-all
+             org-agenda-redo-or-revert
+             org-agenda-refresh-files-list)
   :functions (org-get-agenda-file-buffers
-	      org-agenda-search-directory
-	      my/org-agenda-list-exclude-tags-advice)
-  :bind (:map org-agenda-mode-map
+              org-agenda-search-directory
+              my/org-agenda-list-exclude-tags-advice)
+  :bind ( :map org-agenda-mode-map
           ("g" . org-agenda-redo-or-revert))
   :config
   (defun org-get-agenda-file-buffers ()
@@ -29,9 +29,9 @@
     "Reverts all Org buffers used for the Org agenda, reloading them from disk."
     (interactive)
     (mapcar (lambda (buf)
-	      (with-current-buffer buf
-		(revert-buffer t t)))
-	    (org-get-agenda-file-buffers)))
+              (with-current-buffer buf
+                (revert-buffer t t)))
+            (org-get-agenda-file-buffers)))
 
   (defun org-agenda-redo-or-revert (&optional revert)
     "Rebuild all agenda views in the current buffer.
@@ -39,9 +39,9 @@ With a prefix argument (REVERT), revert all agenda buffers before
 doing so."
     (interactive "P")
     (if revert
-	(progn
-	  (org-agenda-revert-all)
-	  (org-agenda-redo-all))
+        (progn
+          (org-agenda-revert-all)
+          (org-agenda-redo-all))
       (org-agenda-redo-all)))
 
   (defun org-agenda-search-directory (dir)
@@ -76,8 +76,8 @@ Intended as :around advice for `org-agenda-list'."
 
 (use-package org
   :functions (org-get-agenda-file-buffer
-	      org-set-emph-re
-	      org-agenda-files)
+              org-set-emph-re
+              org-agenda-files)
   :config
   (add-to-list 'org-export-backends 'md)
   (setq org-directory machine:org-directory
@@ -95,10 +95,10 @@ Intended as :around advice for `org-agenda-list'."
     '((nil :maxlevel . 3)
           (org-agenda-files :maxlevel . 3)))
   :hook ((org-mode . auto-fill-mode)
-     (org-mode . org-indent-mode)
-     (org-mode . company-mode))
-  :bind (:map org-mode-map
-     ("C-x w" . org-refile)))
+         (org-mode . org-indent-mode)
+         (org-mode . company-mode))
+  :bind ( :map org-mode-map
+          ("C-x w" . org-refile)))
 
 (use-package org-habit
   :after org
