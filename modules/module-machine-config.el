@@ -6,7 +6,7 @@
 (use-package paths
   :demand t
   :defines (path:machine-config-file
-	    path:user-home-directory))
+            path:user-home-directory))
 
 (use-package f
   :ensure t
