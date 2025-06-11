@@ -15,12 +15,12 @@
 
 (use-package initsplit
   :functions (initsplit-load)
-  :autoload (initsplit-load)
+  :defines (initsplit-customizations-alist)
   :ensure t
   :config
   (setq initsplit-customizations-alist
-	`(("^machine:.*" ,path:machine-config-file
-	   "^default$" ,path:machine-config-file)))
+        `(("^machine:.*" ,path:machine-config-file t t)
+          ("^default$" ,path:custom-file t t)))
   :hook (after-init . (lambda () (mapc #'initsplit-load initsplit-customizations-alist))))
 
 (defgroup machine nil
