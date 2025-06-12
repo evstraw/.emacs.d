@@ -14,10 +14,8 @@
   :commands (org-agenda
              org-agenda-redo-all
              org-agenda-revert-all
-             org-agenda-redo-or-revert
-             org-agenda-refresh-files-list)
+             org-agenda-redo-or-revert)
   :functions (org-get-agenda-file-buffers
-              org-agenda-search-directory
               my/org-agenda-list-exclude-tags-advice)
   :bind ( :map org-agenda-mode-map
           ("g" . org-agenda-redo-or-revert))
@@ -43,31 +41,12 @@ doing so."
       (org-agenda-revert-all))
     (org-agenda-redo-all))
 
-  (defun org-agenda-search-directory (dir)
-    "Recursively searches the given DIR and all subdirectories
-for org agenda files that match `org-agenda-file-regexp' and
-returns the result as a list of file paths, represented as
-strings."
-    (if (stringp dir)
-        (if (f-dir-p dir)
-            (directory-files-recursively (f-canonical dir) org-agenda-file-regexp)
-          (error "Argument %s does not refer to an existing directory" dir))
-      (error "Invalid argument %s in org-agenda-search-directory, string required" dir)))
-
   (defun my/org-agenda-list-exclude-tags-advice (orig-fn &rest args)
     "Exclude selected tags from `org-agenda-list'.
 Intended as :around advice for `org-agenda-list'."
     (let ((org-agenda-tag-filter-preset '("-noagenda")))
       (apply orig-fn args)))
   (advice-add #'org-agenda-list :around #'my/org-agenda-list-exclude-tags-advice)
-
-  (defun org-agenda-refresh-files-list ()
-    (interactive)
-    (setq org-agenda-files
-      (append
-       (org-agenda-search-directory machine:org-directory)))
-    (setq recentf-exclude (org-agenda-files)))
-  (org-agenda-refresh-files-list)
   
   (setq org-agenda-start-on-weekday 1
     org-deadline-warning-days 6
