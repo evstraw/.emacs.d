@@ -31,6 +31,11 @@
 (use-package lsp-ui
   :commands (lsp-ui-mode))
 
+(use-package minibuffer
+  :demand t
+  :bind (:map minibuffer-local-completion-map
+         ("SPC" . nil)))
+
 (use-package yasnippet
   :config
   (yas-reload-all)
