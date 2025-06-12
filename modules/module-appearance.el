@@ -15,11 +15,13 @@
                           (projects . 10))))
 
 (use-package doom-themes
-  :autoload (doom-themes-visual-bell-config
-	     doom-themes-org-config)
+  :functions (doom-themes-visual-bell-config
+	      doom-themes-org-config)
+  :demand t
   :config
   (setq doom-themes-enable-bold t      ; If nil, bold is universally disabled
 	doom-themes-enable-italic t)   ; If nil, italics is universally disabled
+  (load-theme 'doom-outrun-electric)
   (doom-themes-visual-bell-config)
   (doom-themes-org-config))
 
