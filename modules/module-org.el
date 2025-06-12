@@ -78,6 +78,7 @@ Intended as :around advice for `org-agenda-list'."
   :functions (org-get-agenda-file-buffer
               org-set-emph-re
               org-agenda-files)
+  :commands (org-id-get-create)
   :config
   (add-to-list 'org-export-backends 'md)
   (setq org-directory machine:org-directory
@@ -137,7 +138,8 @@ Intended as :around advice for `org-agenda-list'."
 (use-package org-roam-dailies
   :after org-roam
   :commands (org-roam-dailies-capture-today
-             org-roam-dailies-goto-today)
+             org-roam-dailies-goto-today
+             org-roam-dailies-goto-date)
   :defines (org-roam-dailies-directory
             org-roam-dailies-capture-templates))
 
@@ -152,7 +154,9 @@ Intended as :around advice for `org-agenda-list'."
            ("i" . org-roam-node-insert)
            ("b" . org-roam-buffer-toggle)
            ("t" . org-roam-dailies-capture-today)
-           ("T" . org-roam-dailies-goto-today))
+           ("T" . org-roam-dailies-goto-today)
+           ("D" . org-roam-dailies-goto-date)
+           ("u" . org-id-get-create))
   :config
   (setq org-roam-directory machine:org-directory
         org-roam-dailies-directory "journals/"
