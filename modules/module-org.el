@@ -49,8 +49,8 @@ Intended as :around advice for `org-agenda-list'."
   (advice-add #'org-agenda-list :around #'my/org-agenda-list-exclude-tags-advice)
   
   (setq org-agenda-start-on-weekday 1
-    org-deadline-warning-days 6
-    org-columns-default-format "%ITEM %TODO %3PRIORITY %CLOCKSUM(Time) %Effort{:} %TAGS"))
+        org-deadline-warning-days 6
+        org-columns-default-format "%ITEM %TODO %3PRIORITY %CLOCKSUM(Time) %Effort{:} %TAGS"))
 
 (use-package org
   :functions (org-get-agenda-file-buffer
@@ -60,10 +60,10 @@ Intended as :around advice for `org-agenda-list'."
   :config
   (add-to-list 'org-export-backends 'md)
   (setq org-directory machine:org-directory
-    org-default-notes-file (expand-file-name "general.org" org-directory))
+        org-default-notes-file (expand-file-name "general.org" org-directory))
   (let ((scale 1.5))
     (setq org-format-latex-options
-      (plist-put (plist-put org-format-latex-options :html-scale scale) :scale scale)))
+          (plist-put (plist-put org-format-latex-options :html-scale scale) :scale scale)))
   ;; Allow multiple line Org emphasis markup.
   ;; http://emacs.stackexchange.com/a/13828/115
   (setcar (nthcdr 4 org-emphasis-regexp-components) 20) ;Up to 20 lines, default is just 1
@@ -71,7 +71,7 @@ Intended as :around advice for `org-agenda-list'."
   ;; settings from above.
   (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
   (setq org-refile-targets
-    '((nil :maxlevel . 3)
+        '((nil :maxlevel . 3)
           (org-agenda-files :maxlevel . 3)))
   :hook ((org-mode . auto-fill-mode)
          (org-mode . org-indent-mode)
@@ -81,7 +81,7 @@ Intended as :around advice for `org-agenda-list'."
   :after org
   :config
   (setq org-habit-graph-column 55
-    org-habit-show-habits-only-for-today nil))
+        org-habit-show-habits-only-for-today nil))
 
 (use-package org-clock
   :after org
@@ -101,15 +101,15 @@ Intended as :around advice for `org-agenda-list'."
   :bind (("C-x c" . org-capture))
   :config
   (setq org-capture-templates
-    '(("n" "Quick Note" entry
-       (file+headline org-default-notes-file "General Notes")
-       "* Note from %T\n %?%i\n  %a" :empty-lines 1 :kill-buffer t)
-      ("t" "Quick todo" entry
-       (file+olp org-default-notes-file "General Agenda" "Other")
-       "* TODO [#B] %?\n %i\n " :empty-lines 1 :kill-buffer t)
-      ("s" "Shopping list item" item
-       (file+olp org-default-notes-file "Shopping List" "Unspecified Store")
-       "- %?%i"))))
+        '(("n" "Quick Note" entry
+           (file+headline org-default-notes-file "General Notes")
+           "* Note from %T\n %?%i\n  %a" :empty-lines 1 :kill-buffer t)
+          ("t" "Quick todo" entry
+           (file+olp org-default-notes-file "General Agenda" "Other")
+           "* TODO [#B] %?\n %i\n " :empty-lines 1 :kill-buffer t)
+          ("s" "Shopping list item" item
+           (file+olp org-default-notes-file "Shopping List" "Unspecified Store")
+           "- %?%i"))))
 
 (use-package org-roam-dailies
   :after org-roam
