@@ -1,7 +1,8 @@
 (use-package f
   :ensure t
-  :functions (f-expand)
-  :autoload (f-expand))
+  :autoload (f-canonical
+             f-dir-p
+             f-expand))
 
 (use-package module-machine-config
   :defines (machine:org-directory))
@@ -48,9 +49,9 @@ for org agenda files that match `org-agenda-file-regexp' and
 returns the result as a list of file paths, represented as
 strings."
     (if (stringp dir)
-    (if (and (file-exists-p dir) (file-directory-p dir))
-        (directory-files-recursively (file-truename dir) org-agenda-file-regexp)
-      (error "Argument %s does not refer to an existing directory" dir))
+        (if (f-dir-p dir)
+            (directory-files-recursively (f-canonical dir) org-agenda-file-regexp)
+          (error "Argument %s does not refer to an existing directory" dir))
       (error "Invalid argument %s in org-agenda-search-directory, string required" dir)))
 
   (defun my/org-agenda-list-exclude-tags-advice (orig-fn &rest args)
