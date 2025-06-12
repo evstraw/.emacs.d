@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 (use-package f
   :ensure t
   :autoload (f-canonical
