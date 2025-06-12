@@ -69,7 +69,7 @@ Intended as :around advice for `org-agenda-list'."
     (setq recentf-exclude (org-agenda-files)))
   (org-agenda-refresh-files-list)
   
-  (setq org-agenda-start-on-weekday 0
+  (setq org-agenda-start-on-weekday 1
     org-deadline-warning-days 6
     org-columns-default-format "%ITEM %TODO %3PRIORITY %CLOCKSUM(Time) %Effort{:} %TAGS"))
 
