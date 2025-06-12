@@ -38,11 +38,9 @@
 With a prefix argument (REVERT), revert all agenda buffers before
 doing so."
     (interactive "P")
-    (if revert
-        (progn
-          (org-agenda-revert-all)
-          (org-agenda-redo-all))
-      (org-agenda-redo-all)))
+    (when revert
+      (org-agenda-revert-all))
+    (org-agenda-redo-all))
 
   (defun org-agenda-search-directory (dir)
     "Recursively searches the given DIR and all subdirectories
