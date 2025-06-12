@@ -96,9 +96,7 @@ Intended as :around advice for `org-agenda-list'."
           (org-agenda-files :maxlevel . 3)))
   :hook ((org-mode . auto-fill-mode)
          (org-mode . org-indent-mode)
-         (org-mode . company-mode))
-  :bind ( :map org-mode-map
-          ("C-x w" . org-refile)))
+         (org-mode . company-mode)))
 
 (use-package org-habit
   :after org
