@@ -35,7 +35,8 @@
 
 (use-package doom-modeline
   :config
-  (setq doom-modeline-buffer-file-name-style 'file-name)
+  (setq doom-modeline-buffer-file-name-style 'file-name
+        doom-modeline-height 24)
   (doom-modeline-mode)
   (doom-themes-visual-bell-config)
   :after (doom-themes nerd-icons))
