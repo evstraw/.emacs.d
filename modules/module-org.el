@@ -135,7 +135,7 @@ Intended as :around advice for `org-agenda-list'."
            ("D" . org-roam-dailies-goto-date)
            ("u" . org-id-get-create))
   :config
-  (setq org-roam-directory machine:org-directory
+  (setq org-roam-directory machine:org-roam-directory
         org-roam-completion-everywhere t
         org-roam-dailies-directory "journals/"
         org-roam-capture-templates

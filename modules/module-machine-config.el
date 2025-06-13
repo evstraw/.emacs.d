@@ -32,5 +32,10 @@
   :type 'directory
   :group 'machine)
 
+(defcustom machine:org-roam-directory machine:org-directory
+  "Base directory for Org-Roam files on this machine."
+  :type 'directory
+  :group 'machine)
+
 ;;; module-machine-config.el ends here
 (provide 'module-machine-config)
