@@ -116,7 +116,8 @@ Intended as :around advice for `org-agenda-list'."
   :after org-roam
   :commands (org-roam-dailies-capture-today
              org-roam-dailies-goto-today
-             org-roam-dailies-goto-date)
+             org-roam-dailies-goto-date
+             org-roam-dailies-goto-yesterday)
   :defines (org-roam-dailies-directory
             org-roam-dailies-capture-templates))
 
@@ -132,6 +133,7 @@ Intended as :around advice for `org-agenda-list'."
            ("b" . org-roam-buffer-toggle)
            ("t" . org-roam-dailies-capture-today)
            ("T" . org-roam-dailies-goto-today)
+           ("Y" . org-roam-dailies-goto-yesterday)
            ("D" . org-roam-dailies-goto-date)
            ("u" . org-id-get-create))
   :config
