@@ -30,11 +30,6 @@
   :autoload (f-expand)
   :functions (f-expand))
 
-;; ---------------
-;; Keep generated settings in a separate file.
-;; ---------------
-(load (setq custom-file path:custom-file))
-
 (require 'module-machine-config)
 
 ;; ---------------

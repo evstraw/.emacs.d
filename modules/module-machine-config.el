@@ -10,18 +10,15 @@
 
 (use-package f
   :ensure t
-  :functions (f-expand)
   :autoload (f-expand))
 
 (use-package initsplit
-  :functions (initsplit-load)
-  :defines (initsplit-customizations-alist)
   :ensure t
-  :config
-  (setq initsplit-customizations-alist
-        `(("^machine:.*" ,path:machine-config-file t t)
-          ("^default$" ,path:custom-file t t)))
-  :hook (after-init . (lambda () (mapc #'initsplit-load initsplit-customizations-alist))))
+  :demand t
+  :init (defalias 'find-if 'cl-find-if)
+  (setq custom-file path:custom-file
+        initsplit-customizations-alist
+        `(("^machine:.*" ,path:machine-config-file t t))))
 
 (defgroup machine nil
   "Group for machine-specific settings."
