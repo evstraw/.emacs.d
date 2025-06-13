@@ -21,7 +21,7 @@
   :config
   (setq doom-themes-enable-bold t      ; If nil, bold is universally disabled
 	doom-themes-enable-italic t)   ; If nil, italics is universally disabled
-  (load-theme 'doom-outrun-electric)
+  (load-theme 'doom-outrun-electric t)
   (doom-themes-visual-bell-config)
   (doom-themes-org-config))
 
