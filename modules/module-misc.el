@@ -82,10 +82,6 @@ This can be useful in situations where you have a symbolically
     (interactive)
     (let ((default-directory "~/.emacs.d/modules/"))
       (call-interactively 'find-file)))
-  (defun find-manifest-file ()
-    (interactive)
-    (let ((default-directory "~/Sync/code/manifest/"))
-      (call-interactively 'find-file)))
   (defun find-dotfiles ()
     (interactive)
     (let ((default-directory "~/Sync/code/dotfiles/"))
@@ -100,11 +96,9 @@ This can be useful in situations where you have a symbolically
     ["Find configuration files"
      ("i" "Open init file" open-init-file)
      ("m" "Open init module" find-init-module)
-     ("d" "Open dotfile" find-dotfiles)
-     ("p" "Open Guix manifest file" find-manifest-file)]
+     ("d" "Open dotfile" find-dotfiles)]
     ["Common commands"
      ("a" "Org Agenda" org-agenda)
-     ("M" "Mail" gnus)
      ("f" "Visit linked file" visit-file-truename)])
   :bind (("C-<menu>" . quick-goto)
 	 ("C-<f12>" . quick-goto)
