@@ -50,6 +50,23 @@
 (use-package module-machine-config
   :defines (machine:org-directory))
 
+(defun visit-file-truename ()
+  "Attempt to visit the link target of the current buffer's visited file.
+
+If the current buffer is visiting a file or directory, attempts
+  to resolve symbolic links to find the \"true\" file path (by
+  visiting the file or directory given by `file-truename').
+
+This can be useful in situations where you have a symbolically
+  linked file and are attempting to use tools or minor modes that
+  do not play well with symbolic links (e.g. some LSP servers)."
+  (interactive)
+  (if (eq major-mode 'dired-mode)
+      (find-file (file-truename default-directory))
+    (if (buffer-file-name)
+	(find-file (file-truename (buffer-file-name)))
+      (message "Buffer is not visiting a file!"))))
+
 (use-package transient
   :init
   (defun find-code-dir ()
@@ -79,13 +96,6 @@
     (interactive)
     (let ((default-directory "~/Sync/code/dotfiles/"))
       (call-interactively 'find-file)))
-  (defun visit-file-truename ()
-    (interactive)
-    (if (eq major-mode 'dired-mode)
-	(find-file (file-truename default-directory))
-      (if (buffer-file-name)
-	  (find-file (file-truename (buffer-file-name)))
-	(message "Buffer is not visiting a file!"))))
   :config
   (transient-define-prefix quick-goto ()
     "Quickly runs a command from a popup window."
