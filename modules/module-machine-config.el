@@ -6,21 +6,19 @@
 (use-package paths
   :demand t
   :defines (path:machine-config-file
-	    path:user-home-directory))
+            path:user-home-directory))
 
 (use-package f
   :ensure t
-  :functions (f-expand)
   :autoload (f-expand))
 
 (use-package initsplit
-  :functions (initsplit-load)
   :ensure t
-  :config
-  (setq initsplit-customizations-alist
-	`(("^machine:.*" ,path:machine-config-file
-	   "^default$" ,path:machine-config-file)))
-  :hook (after-init . (lambda () (mapc #'initsplit-load initsplit-customizations-alist))))
+  :demand t
+  :init (defalias 'find-if 'cl-find-if)
+  (setq custom-file path:custom-file
+        initsplit-customizations-alist
+        `(("^machine:.*" ,path:machine-config-file t t))))
 
 (defgroup machine nil
   "Group for machine-specific settings."
@@ -28,6 +26,11 @@
 
 (defcustom machine:org-directory (f-expand "Notes" path:user-home-directory)
   "Base directory for Org-Mode files containing notes on this machine."
+  :type 'directory
+  :group 'machine)
+
+(defcustom machine:org-roam-directory machine:org-directory
+  "Base directory for Org-Roam files on this machine."
   :type 'directory
   :group 'machine)
 

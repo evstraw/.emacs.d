@@ -22,3 +22,4 @@ games
 /modules/machine-select.el
 /projects
 /machine-config.el
+transient/history.el

@@ -1,79 +1,70 @@
+;; -*- lexical-binding: t; -*-
 (use-package f
   :ensure t
-  :functions (f-expand)
-  :autoload (f-expand))
+  :autoload (f-canonical
+             f-dir-p
+             f-expand))
 
 (use-package module-machine-config
   :defines (machine:org-directory))
 
-(defun org-get-agenda-file-buffers ()
-  "Return all open agenda file buffers."
-  (mapcar (lambda (file)
-	    (org-get-agenda-file-buffer file))
-	  org-agenda-files))
-
-(defun org-agenda-revert-all ()
-  "Reverts all Org buffers used for the Org agenda, reloading them from disk."
-  (interactive)
-  (mapcar (lambda (buf)
-	    (with-current-buffer buf
-	      (revert-buffer t t)))
-	  (org-get-agenda-file-buffers)))
-
-(defun org-agenda-redo-or-revert (&optional revert)
-  "Rebuild all agenda views in the current buffer.
-With a prefix argument (REVERT), revert all agenda buffers before
-doing so."
-  (interactive "P")
-  (if revert
-      (progn
-	(org-agenda-revert-all)
-	(org-agenda-redo-all))
-    (org-agenda-redo-all)))
-
-(defun my/org-agenda-list-exclude-tags-advice (orig-fn &rest args)
-  "Exclude selected tags from `org-agenda-list'.
-Intended as :around advice for `org-agenda-list'."
-  (let ((org-agenda-tag-filter-preset '("-noagenda")))
-    (apply orig-fn args)))
+(use-package recentf
+  :defines (recentf-exclude))
 
 (use-package org-agenda
-  :commands (org-agenda)
-  :bind (:map org-agenda-mode-map
-  	      ("g" . org-agenda-redo-or-revert))
+  :commands (org-agenda
+             org-agenda-redo-all
+             org-agenda-revert-all
+             org-agenda-redo-or-revert)
+  :functions (org-get-agenda-file-buffers
+              my/org-agenda-list-exclude-tags-advice)
+  :bind ( :map org-agenda-mode-map
+          ("g" . org-agenda-redo-or-revert))
   :config
-  (defun org-agenda-search-directory (dir)
-    "Recursively searches the given DIR and all subdirectories
-for org agenda files that match `org-agenda-file-regexp' and
-returns the result as a list of file paths, represented as
-strings."
-    (if (stringp dir)
-	(if (and (file-exists-p dir) (file-directory-p dir))
-	    (directory-files-recursively (file-truename dir) org-agenda-file-regexp)
-	  (error "Argument %s does not refer to an existing directory" dir))
-      (error "Invalid argument %s in org-agenda-search-directory, string required" dir)))
+  (defun org-get-agenda-file-buffers ()
+    "Return all open agenda file buffers."
+    (mapcar #'org-get-agenda-file-buffer org-agenda-files))
 
-  (advice-add #'org-agenda-list :around #'my/org-agenda-list-exclude-tags-advice)
-  (defun org-agenda-refresh-files-list ()
+  (defun org-agenda-revert-all ()
+    "Reverts all Org buffers used for the Org agenda, reloading them from disk."
     (interactive)
-    (setq org-agenda-files
-	  (append
-	   (org-agenda-search-directory machine:org-directory)))
-    (setq recentf-exclude (org-agenda-files)))
-  (org-agenda-refresh-files-list)
+    (mapcar (lambda (buf)
+              (with-current-buffer buf
+                (revert-buffer t t)))
+            (org-get-agenda-file-buffers)))
+
+  (defun org-agenda-redo-or-revert (&optional revert)
+    "Rebuild all agenda views in the current buffer.
+With a prefix argument (REVERT), revert all agenda buffers before
+doing so."
+    (interactive "P")
+    (when revert
+      (org-agenda-revert-all))
+    (org-agenda-redo-all))
+
+  (defun my/org-agenda-list-exclude-tags-advice (orig-fn &rest args)
+    "Exclude selected tags from `org-agenda-list'.
+Intended as :around advice for `org-agenda-list'."
+    (let ((org-agenda-tag-filter-preset '("-noagenda")))
+      (apply orig-fn args)))
+  (advice-add #'org-agenda-list :around #'my/org-agenda-list-exclude-tags-advice)
   
-  (setq org-agenda-start-on-weekday 0
-	org-deadline-warning-days 6
-	org-columns-default-format "%ITEM %TODO %3PRIORITY %CLOCKSUM(Time) %Effort{:} %TAGS"))
+  (setq org-agenda-start-on-weekday 1
+        org-deadline-warning-days 6
+        org-columns-default-format "%ITEM %TODO %3PRIORITY %CLOCKSUM(Time) %Effort{:} %TAGS"))
 
 (use-package org
+  :functions (org-get-agenda-file-buffer
+              org-set-emph-re
+              org-agenda-files)
+  :commands (org-id-get-create)
   :config
   (add-to-list 'org-export-backends 'md)
   (setq org-directory machine:org-directory
-	org-default-notes-file (expand-file-name "general.org" org-directory))
+        org-default-notes-file (expand-file-name "general.org" org-directory))
   (let ((scale 1.5))
     (setq org-format-latex-options
-	  (plist-put (plist-put org-format-latex-options :html-scale scale) :scale scale)))
+          (plist-put (plist-put org-format-latex-options :html-scale scale) :scale scale)))
   ;; Allow multiple line Org emphasis markup.
   ;; http://emacs.stackexchange.com/a/13828/115
   (setcar (nthcdr 4 org-emphasis-regexp-components) 20) ;Up to 20 lines, default is just 1
@@ -81,51 +72,88 @@ strings."
   ;; settings from above.
   (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
   (setq org-refile-targets
-	'((nil :maxlevel . 3)
+        '((nil :maxlevel . 3)
           (org-agenda-files :maxlevel . 3)))
   :hook ((org-mode . auto-fill-mode)
-	 (org-mode . org-indent-mode)
-	 (org-mode . company-mode))
-  :bind (:map org-mode-map
-	 ("C-x w" . org-refile)))
+         (org-mode . org-indent-mode)
+         (org-mode . company-mode)))
 
 (use-package org-habit
   :after org
   :config
   (setq org-habit-graph-column 55
-	org-habit-show-habits-only-for-today nil))
+        org-habit-show-habits-only-for-today nil))
+
+(use-package org-clock
+  :after org
+  :functions (org-clocking-p)
+  :commands (org-clock-out
+             org-clock-in-last)
+  :config
+  (defun my/org-clock-toggle ()
+    (interactive)
+    (if (org-clocking-p)
+        (call-interactively #'org-clock-out)
+      (call-interactively #'org-clock-in-last)))
+  :bind (("S-<f15>" . my/org-clock-toggle)))
 
 (use-package org-capture
   :after org
   :bind (("C-x c" . org-capture))
   :config
   (setq org-capture-templates
-	'(("n" "Quick Note" entry
-	   (file+headline org-default-notes-file "General Notes")
-	   "* Note from %T\n %?%i\n  %a" :empty-lines 1 :kill-buffer t)
-	  ("t" "Quick todo" entry
-	   (file+olp org-default-notes-file "General Agenda" "Other")
-	   "* TODO [#B] %?\n %i\n " :empty-lines 1 :kill-buffer t)
-	  ("s" "Shopping list item" item
-	   (file+olp org-default-notes-file "Shopping List" "Unspecified Store")
-	   "- %?%i"))))
+        '(("n" "Quick Note" entry
+           (file+headline org-default-notes-file "General Notes")
+           "* Note from %T\n %?%i\n  %a" :empty-lines 1 :kill-buffer t)
+          ("t" "Quick todo" entry
+           (file+olp org-default-notes-file "General Agenda" "Other")
+           "* TODO [#B] %?\n %i\n " :empty-lines 1 :kill-buffer t)
+          ("s" "Shopping list item" item
+           (file+olp org-default-notes-file "Shopping List" "Unspecified Store")
+           "- %?%i"))))
 
 (use-package org-roam-dailies
   :after org-roam
   :commands (org-roam-dailies-capture-today
-             org-roam-dailies-goto-today)
+             org-roam-dailies-goto-today
+             org-roam-dailies-goto-date
+             org-roam-dailies-goto-yesterday)
   :defines (org-roam-dailies-directory
             org-roam-dailies-capture-templates))
 
+(use-package org-roam-db
+  :after org-roam
+  :commands (org-roam-db-autosync-mode))
+
 (use-package org-roam
-  :after org
-  :bind (("C-c C-n f" . org-roam-node-find)
-         ("C-c C-n i" . org-roam-node-insert)
-         ("C-c C-n b" . org-roam-buffer-toggle)
-         ("C-c C-n t" . org-roam-dailies-capture-today)
-         ("C-c C-n T" . org-roam-dailies-goto-today))
+  :functions (my/org-roam-file-list
+              my/org-roam-refresh-agenda-list
+              org-roam-node-list
+              org-roam-node-file)
+  :bind* ( :prefix-map my/org-roam-quick-map
+           :prefix "C-x C-n"
+           ("f" . org-roam-node-find)
+           ("i" . org-roam-node-insert)
+           ("b" . org-roam-buffer-toggle)
+           ("t" . org-roam-dailies-capture-today)
+           ("T" . org-roam-dailies-goto-today)
+           ("Y" . org-roam-dailies-goto-yesterday)
+           ("D" . org-roam-dailies-goto-date)
+           ("u" . org-id-get-create))
   :config
-  (setq org-roam-directory machine:org-directory
+  (defun my/org-roam-file-list ()
+    "Returns a list of files containing nodes in the Org-Roam database."
+    (seq-uniq (mapcar #'org-roam-node-file (org-roam-node-list))))
+  (defun my/org-roam-refresh-agenda-list ()
+    "Refreshes the org agenda files list with all files being tracked by Org-Roam."
+    (interactive)
+    (setq org-agenda-files (my/org-roam-file-list)))
+
+  ;; Build the agenda list the first time for the session
+  (my/org-roam-refresh-agenda-list)
+
+  (setq org-roam-directory machine:org-roam-directory
+        org-roam-completion-everywhere t
         org-roam-dailies-directory "journals/"
         org-roam-capture-templates
         '(("d" "default" plain
@@ -136,10 +164,7 @@ strings."
         '(("d" "default" entry
            "* %?"
            :target (file+head "%<%Y_%m_%d>.org"
-                              "#+title: %<%b %-d, %Y>\n")))))
-
-(use-package org-roam-db
-  :after org-roam
-  :config (org-roam-db-autosync-mode))
+                              "#+title: %<%b %-d, %Y>\n"))))
+  (org-roam-db-autosync-mode))
 
 (provide 'module-org)

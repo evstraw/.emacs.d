@@ -1,3 +1,7 @@
+(use-package f
+  :ensure t
+  :autoload (f-expand))
+
 (use-package csv-mode
   :defer t)
 
@@ -5,6 +9,7 @@
   :defer t)
 
 (use-package graphviz-dot-mode
+  :defines (graphviz-dot-indent-width)
   :config
   (setq graphviz-dot-indent-width 4)
   :commands (graphviz-dot-mode)
@@ -42,6 +47,26 @@
   (interactive)
   (find-file (f-expand "init.el" user-emacs-directory)))
 
+(use-package module-machine-config
+  :defines (machine:org-directory))
+
+(defun visit-file-truename ()
+  "Attempt to visit the link target of the current buffer's visited file.
+
+If the current buffer is visiting a file or directory, attempts
+  to resolve symbolic links to find the \"true\" file path (by
+  visiting the file or directory given by `file-truename').
+
+This can be useful in situations where you have a symbolically
+  linked file and are attempting to use tools or minor modes that
+  do not play well with symbolic links (e.g. some LSP servers)."
+  (interactive)
+  (if (eq major-mode 'dired-mode)
+      (find-file (file-truename default-directory))
+    (if (buffer-file-name)
+	(find-file (file-truename (buffer-file-name)))
+      (message "Buffer is not visiting a file!"))))
+
 (use-package transient
   :init
   (defun find-code-dir ()
@@ -49,7 +74,7 @@
     (find-file "~/Sync/code/"))
   (defun find-notes-dir ()
     (interactive)
-    (find-file "~/Documents/notes/"))
+    (find-file machine:org-directory))
   (defun find-guix-dir ()
     (interactive)
     (find-file "~/Sync/code/guix-channel/"))
@@ -57,21 +82,10 @@
     (interactive)
     (let ((default-directory "~/.emacs.d/modules/"))
       (call-interactively 'find-file)))
-  (defun find-manifest-file ()
-    (interactive)
-    (let ((default-directory "~/Sync/code/manifest/"))
-      (call-interactively 'find-file)))
   (defun find-dotfiles ()
     (interactive)
     (let ((default-directory "~/Sync/code/dotfiles/"))
       (call-interactively 'find-file)))
-  (defun visit-file-truename ()
-    (interactive)
-    (if (eq major-mode 'dired-mode)
-	(find-file (file-truename default-directory))
-      (if (buffer-file-name)
-	  (find-file (file-truename (buffer-file-name)))
-	(message "Buffer is not visiting a file!"))))
   :config
   (transient-define-prefix quick-goto ()
     "Quickly runs a command from a popup window."
@@ -82,11 +96,9 @@
     ["Find configuration files"
      ("i" "Open init file" open-init-file)
      ("m" "Open init module" find-init-module)
-     ("d" "Open dotfile" find-dotfiles)
-     ("p" "Open Guix manifest file" find-manifest-file)]
+     ("d" "Open dotfile" find-dotfiles)]
     ["Common commands"
      ("a" "Org Agenda" org-agenda)
-     ("M" "Mail" gnus)
      ("f" "Visit linked file" visit-file-truename)])
   :bind (("C-<menu>" . quick-goto)
 	 ("C-<f12>" . quick-goto)
@@ -101,6 +113,7 @@
     (setq tramp-remote-process-environment process-environment)))
 
 (global-set-key (kbd "C-x <f5>") #'revert-buffer)
+(global-set-key (kbd "s-u") #'revert-buffer)
 
 (defun toggle-window-split ()
   (interactive)
