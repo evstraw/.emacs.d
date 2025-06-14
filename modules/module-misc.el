@@ -1,3 +1,7 @@
+(use-package f
+  :ensure t
+  :autoload (f-expand))
+
 (use-package csv-mode
   :defer t)
 
@@ -5,6 +9,7 @@
   :defer t)
 
 (use-package graphviz-dot-mode
+  :defines (graphviz-dot-indent-width)
   :config
   (setq graphviz-dot-indent-width 4)
   :commands (graphviz-dot-mode)
