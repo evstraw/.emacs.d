@@ -126,6 +126,10 @@ Intended as :around advice for `org-agenda-list'."
   :commands (org-roam-db-autosync-mode))
 
 (use-package org-roam
+  :functions (my/org-roam-file-list
+              my/org-roam-refresh-agenda-list
+              org-roam-node-list
+              org-roam-node-file)
   :bind* ( :prefix-map my/org-roam-quick-map
            :prefix "C-x C-n"
            ("f" . org-roam-node-find)
@@ -137,6 +141,17 @@ Intended as :around advice for `org-agenda-list'."
            ("D" . org-roam-dailies-goto-date)
            ("u" . org-id-get-create))
   :config
+  (defun my/org-roam-file-list ()
+    "Returns a list of files containing nodes in the Org-Roam database."
+    (seq-uniq (mapcar #'org-roam-node-file (org-roam-node-list))))
+  (defun my/org-roam-refresh-agenda-list ()
+    "Refreshes the org agenda files list with all files being tracked by Org-Roam."
+    (interactive)
+    (setq org-agenda-files (my/org-roam-file-list)))
+
+  ;; Build the agenda list the first time for the session
+  (my/org-roam-refresh-agenda-list)
+
   (setq org-roam-directory machine:org-roam-directory
         org-roam-completion-everywhere t
         org-roam-dailies-directory "journals/"
