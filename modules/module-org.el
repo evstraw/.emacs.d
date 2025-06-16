@@ -166,13 +166,15 @@ Intended as `:around' advice for
   (setq org-roam-db-node-include-function #'my/org-roam-include-node-at-point-p
         org-roam-completion-everywhere t
         org-roam-dailies-directory "journals/")
-  (let ((daily-target '(file+head "%<%Y_%m_%d>.org" "#+title: %<%b %-d, %Y>\n"))
-        (page-target '(file+head "pages/${slug}.org" "#+title: ${title}\n")))
+  (let ((daily-target '(file+head "%<%Y_%m_%d>.org" "#+title: %<%b %-d, %Y>\n")))
     (setq org-roam-capture-templates
-          `(("d" "default" plain
-             "%?"
-             :target ,page-target
-             :unnarrowed t))
+          `(( "d" "default" plain
+              "%?"
+              :target (file+head "pages/%{slug}.org" "#+title: ${title}\n")
+              :unnarrowed t)
+            ( "j" "jira ticket" plain
+              "* Link to ticket\n[[jira:${title}]]\n\n* Short Summary\n%^{Short Summary}"
+              :if-new (file+head "pages/tickets/${slug}.org" "#+title: ${title}")))
           org-roam-dailies-capture-templates
           `(("d" "default" entry
              "* %?"
