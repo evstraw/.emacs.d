@@ -153,17 +153,18 @@ Intended as :around advice for `org-agenda-list'."
 
   (setq org-roam-db-node-include-function #'my/org-roam-include-node-at-point-p
         org-roam-completion-everywhere t
-        org-roam-dailies-directory "journals/"
-        org-roam-capture-templates
-        '(("d" "default" plain
-           "%?" :target
-           (file+head "pages/${slug}.org" "#+title: ${title}\n")
-           :unnarrowed t))
-        org-roam-dailies-capture-templates
-        '(("d" "default" entry
-           "* %?"
-           :target (file+head "%<%Y_%m_%d>.org"
-                              "#+title: %<%b %-d, %Y>\n"))))
+        org-roam-dailies-directory "journals/")
+  (let ((daily-target '(file+head "%<%Y_%m_%d>.org" "#+title: %<%b %-d, %Y>\n"))
+        (page-target '(file+head "pages/${slug}.org" "#+title: ${title}\n")))
+    (setq org-roam-capture-templates
+          `(("d" "default" plain
+             "%?"
+             :target ,page-target
+             :unnarrowed t))
+          org-roam-dailies-capture-templates
+          `(("d" "default" entry
+             "* %?"
+             :target ,daily-target))))
   (defun my/org-roam-file-list ()
     "Returns a list of files containing nodes in the Org-Roam database."
     (seq-uniq (mapcar #'org-roam-node-file (org-roam-node-list))))
