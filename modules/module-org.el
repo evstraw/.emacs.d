@@ -164,6 +164,9 @@ Intended as :around advice for `org-agenda-list'."
           org-roam-dailies-capture-templates
           `(("d" "default" entry
              "* %?"
+             :target ,daily-target)
+            ("t" "task" entry
+             "* TODO %?\nSCHEDULED: %t\n:PROPERTIES:\n:CREATED: %U\n:END:"
              :target ,daily-target))))
   (defun my/org-roam-file-list ()
     "Returns a list of files containing nodes in the Org-Roam database."
