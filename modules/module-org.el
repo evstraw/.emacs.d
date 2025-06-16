@@ -193,4 +193,15 @@ Intended as `:around' advice for
 
   (org-roam-db-autosync-mode))
 
+
+(use-package window
+  :config
+  (add-to-list 'display-buffer-alist
+               '("\\*org-roam\\*"
+                 display-buffer-in-direction
+                 (direction . below)
+                 (slot . 0)
+                 (window-height . 0.33)
+                 (dedicated . t))))
+
 (provide 'module-org)
