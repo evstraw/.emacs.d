@@ -1,9 +1,9 @@
 ;; -*- lexical-binding: t; -*-
 (use-package f
   :ensure t
-  :autoload (f-canonical
-             f-dir-p
-             f-expand))
+  :autoload (f-ancestor-of-p
+             f-expand
+             f-relative))
 
 (use-package module-machine-config
   :defines (machine:org-directory))
@@ -129,7 +129,8 @@ Intended as :around advice for `org-agenda-list'."
   :functions (my/org-roam-file-list
               my/org-roam-refresh-agenda-list
               org-roam-node-list
-              org-roam-node-file)
+              org-roam-node-file
+              my/org-roam-include-node-at-point-p)
   :bind* ( :prefix-map my/org-roam-quick-map
            :prefix "C-x C-n"
            ("f" . org-roam-node-find)
@@ -141,18 +142,16 @@ Intended as :around advice for `org-agenda-list'."
            ("D" . org-roam-dailies-goto-date)
            ("u" . org-id-get-create))
   :config
-  (defun my/org-roam-file-list ()
-    "Returns a list of files containing nodes in the Org-Roam database."
-    (seq-uniq (mapcar #'org-roam-node-file (org-roam-node-list))))
-  (defun my/org-roam-refresh-agenda-list ()
-    "Refreshes the org agenda files list with all files being tracked by Org-Roam."
-    (interactive)
-    (setq org-agenda-files (my/org-roam-file-list)))
+  (setq org-roam-directory machine:org-roam-directory)
 
-  ;; Build the agenda list the first time for the session
-  (my/org-roam-refresh-agenda-list)
+  (defun my/org-roam-include-node-at-point-p ()
+    "Determine whether Org node at point should be included in the database."
+    (when-let ((bfilename (buffer-file-name))
+               (fname (f-relative bfilename org-roam-directory)))
+      (not (cl-find-if (lambda (path) (f-ancestor-of-p path fname))
+                       machine:org-roam-exclude))))
 
-  (setq org-roam-directory machine:org-roam-directory
+  (setq org-roam-db-node-include-function #'my/org-roam-include-node-at-point-p
         org-roam-completion-everywhere t
         org-roam-dailies-directory "journals/"
         org-roam-capture-templates
@@ -165,6 +164,17 @@ Intended as :around advice for `org-agenda-list'."
            "* %?"
            :target (file+head "%<%Y_%m_%d>.org"
                               "#+title: %<%b %-d, %Y>\n"))))
+  (defun my/org-roam-file-list ()
+    "Returns a list of files containing nodes in the Org-Roam database."
+    (seq-uniq (mapcar #'org-roam-node-file (org-roam-node-list))))
+  (defun my/org-roam-refresh-agenda-list ()
+    "Refreshes the org agenda files list with all files being tracked by Org-Roam."
+    (interactive)
+    (setq org-agenda-files (my/org-roam-file-list)))
+
+  ;; Build the agenda list the first time for the session
+  (my/org-roam-refresh-agenda-list)
+
   (org-roam-db-autosync-mode))
 
 (provide 'module-org)

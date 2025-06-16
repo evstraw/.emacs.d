@@ -34,5 +34,13 @@
   :type 'directory
   :group 'machine)
 
+(defcustom machine:org-roam-exclude '("logseq/")
+  "List of directory or file paths to be excluded from Org-Roam on this machine.
+
+Paths should be relative to `machine:org-roam-directory'."
+  :type '(repeat string)
+  :group 'machine
+  :set-after '(machine:org-directory))
+
 ;;; module-machine-config.el ends here
 (provide 'module-machine-config)
