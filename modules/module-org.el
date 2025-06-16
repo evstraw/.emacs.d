@@ -125,7 +125,19 @@ Intended as :around advice for `org-agenda-list'."
   :after org-roam
   :commands (org-roam-db-autosync-mode))
 
+(defun my/org-roam-dailies-goto-default-advice (orig-fn &rest args)
+  "Use the default capture template when jumping to Dailies file.
+
+Intended as `:around' advice for
+`org-roam-dailies-goto-today' (and others along those lines)."
+  (apply orig-fn (append args '("d"))))
+
 (use-package org-roam
+  :init
+  (dolist (fn (list #'org-roam-dailies-goto-today
+                    #'org-roam-dailies-goto-yesterday
+                    #'org-roam-dailies-goto-date))
+    (advice-add fn :around #'my/org-roam-dailies-goto-default-advice))
   :functions (my/org-roam-file-list
               my/org-roam-refresh-agenda-list
               org-roam-node-list
