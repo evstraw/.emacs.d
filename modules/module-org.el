@@ -121,7 +121,9 @@ Intended as :around advice for `org-agenda-list'."
      ("o" "Clock out of current task" org-clock-out)
      ("j" "Jump to current/most recent task" org-clock-goto)
      ("t" "Toggle between clocking out/clocking into last task"
-      my/org-clock-toggle)]))
+      my/org-clock-toggle)]
+    ["Commands"
+     ("u" "Ensure the entry at point has an ID" org-id-get-create)]))
 
 (use-package org-capture
   :after org
@@ -182,7 +184,7 @@ Intended as `:around' advice for
            ("T" . org-roam-dailies-goto-today)
            ("Y" . org-roam-dailies-goto-yesterday)
            ("D" . org-roam-dailies-goto-date)
-           ("u" . org-id-get-create))
+           ("o" . my/org-shortcuts))
   :config
   (setq org-roam-directory machine:org-roam-directory)
 
