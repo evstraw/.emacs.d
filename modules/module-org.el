@@ -209,7 +209,7 @@ Intended as `:around' advice for
     (setq org-roam-capture-templates
           `(( "d" "default" plain
               "%?"
-              :target (file+head "pages/%{slug}.org" "#+title: ${title}\n")
+              :target (file+head "pages/${slug}.org" "#+title: ${title}\n")
               :unnarrowed t)
             ( "j" "jira ticket" plain
               "* Link to ticket\n[[jira:${title}]]\n\n* Short Summary\n%^{Short Summary}"
