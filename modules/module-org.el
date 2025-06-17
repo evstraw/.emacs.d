@@ -59,8 +59,16 @@ Intended as :around advice for `org-agenda-list'."
               org-agenda-files
               org-time-stamp-format)
   :commands (org-id-get-create
-             org-set-property)
+             org-set-property
+             my/org-contextual-refile)
   :config
+  (defun my/org-contextual-refile ()
+    "Calls the appropriate Org/Org-Roam refile for entry at point."
+    (interactive)
+    (call-interactively (if (org-roam-node-at-point)
+                            #'org-roam-refile
+                          #'org-refile)))
+
   (add-to-list 'org-export-backends 'md)
   (setq org-directory machine:org-directory
         org-default-notes-file (expand-file-name "general.org" org-directory))
@@ -73,9 +81,8 @@ Intended as :around advice for `org-agenda-list'."
   ;; Below is needed to apply the modified `org-emphasis-regexp-components'
   ;; settings from above.
   (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
-  (setq org-refile-targets
-        '((nil :maxlevel . 3)
-          (org-agenda-files :maxlevel . 3)))
+  :bind ( :map org-mode-map
+          ("C-c C-w" . my/org-contextual-refile))
   :hook ((org-mode . auto-fill-mode)
          (org-mode . org-indent-mode)
          (org-mode . company-mode)))
@@ -160,10 +167,12 @@ Intended as `:around' advice for
   :functions (org-roam-node-list
               org-roam-node-file
               org-roam-node-read
+              org-roam-node-at-point
               my/org-roam-ensure-props
               my/org-roam-file-list
               my/org-roam-include-node-at-point-p)
-  :commands (my/org-roam-refresh-agenda-list)
+  :commands (my/org-roam-refresh-agenda-list
+             org-roam-refile)
   :bind* ( :prefix-map my/org-roam-quick-map
            :prefix "C-x C-n"
            ("f" . org-roam-node-find)
