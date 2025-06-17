@@ -56,8 +56,10 @@ Intended as :around advice for `org-agenda-list'."
 (use-package org
   :functions (org-get-agenda-file-buffer
               org-set-emph-re
-              org-agenda-files)
-  :commands (org-id-get-create)
+              org-agenda-files
+              org-time-stamp-format)
+  :commands (org-id-get-create
+             org-set-property)
   :config
   (add-to-list 'org-export-backends 'md)
   (setq org-directory machine:org-directory
@@ -158,6 +160,7 @@ Intended as `:around' advice for
   :functions (org-roam-node-list
               org-roam-node-file
               org-roam-node-read
+              my/org-roam-ensure-props
               my/org-roam-file-list
               my/org-roam-include-node-at-point-p)
   :commands (my/org-roam-refresh-agenda-list)
@@ -173,6 +176,12 @@ Intended as `:around' advice for
            ("u" . org-id-get-create))
   :config
   (setq org-roam-directory machine:org-roam-directory)
+
+  (defun my/org-roam-ensure-props ()
+    (org-set-property "CREATED" (format-time-string
+                                 (org-time-stamp-format t t)
+                                 (current-time)))
+    (org-set-property "ID" (org-id-new)))
 
   (defun my/org-roam-include-node-at-point-p ()
     "Determine whether Org node at point should be included in the database."
@@ -196,10 +205,12 @@ Intended as `:around' advice for
           org-roam-dailies-capture-templates
           `(("d" "default" entry
              "* %?"
-             :target ,daily-target)
+             :if-new ,daily-target
+             :before-finalize my/org-roam-ensure-props)
             ("t" "task" entry
-             "* TODO %?\nSCHEDULED: %t\n:PROPERTIES:\n:CREATED: %U\n:END:"
-             :target ,daily-target))))
+             "* TODO %?\nSCHEDULED: %t"
+             :if-new ,daily-target
+             :before-finalize my/org-roam-ensure-props))))
   (defun my/org-roam-file-list ()
     "Returns a list of files containing nodes in the Org-Roam database."
     (seq-uniq (mapcar #'org-roam-node-file (org-roam-node-list))))
