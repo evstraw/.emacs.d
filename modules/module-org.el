@@ -138,11 +138,12 @@ Intended as `:around' advice for
                     #'org-roam-dailies-goto-yesterday
                     #'org-roam-dailies-goto-date))
     (advice-add fn :around #'my/org-roam-dailies-goto-default-advice))
-  :functions (my/org-roam-file-list
-              my/org-roam-refresh-agenda-list
-              org-roam-node-list
+  :functions (org-roam-node-list
               org-roam-node-file
+              org-roam-node-read
+              my/org-roam-file-list
               my/org-roam-include-node-at-point-p)
+  :commands (my/org-roam-refresh-agenda-list)
   :bind* ( :prefix-map my/org-roam-quick-map
            :prefix "C-x C-n"
            ("f" . org-roam-node-find)
