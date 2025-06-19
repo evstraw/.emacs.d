@@ -149,5 +149,8 @@ This can be useful in situations where you have a symbolically
   ;; Fixes a bug that occurs when trying to fontify results, see
   ;; https://www.reddit.com/r/emacs/comments/13jh7gk/comment/jkf225g/
   (setq esup-depth 0))
+
+(use-package autorevert
+  :config (setq auto-revert-interval 2))
   
 (provide 'module-misc)
