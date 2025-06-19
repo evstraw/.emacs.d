@@ -206,6 +206,27 @@ Intended as `:around' advice for
       (not (cl-find-if (lambda (path) (f-ancestor-of-p path fname))
                        machine:org-roam-exclude))))
 
+  (defun my/org-roam-split-subtask ()
+    (interactive)
+    (if (not (org-clocking-p))
+        (progn (ding)
+               (message "Not currently clocked in to a task"))
+      (if-let ((roam-node (save-excursion
+                            (with-current-buffer (marker-buffer org-clock-marker)
+                              (goto-char (marker-position org-clock-marker))
+                              (org-roam-node-at-point)))))
+          (org-roam-capture-
+           :node roam-node
+           :templates `(("T" "subtask of current task" entry
+                         "* TODO %?"
+                         :target (node ,(org-roam-node-id roam-node))
+                         :clock-in t
+                         :clock-keep t
+                         :empty-lines 1
+                         :before-finalize my/org-roam-ensure-props)))
+        (progn (ding)
+               (message "Not currently clocked into an Org-Roam task")))))
+
   (setq org-roam-db-node-include-function #'my/org-roam-include-node-at-point-p
         org-roam-completion-everywhere t
         org-roam-dailies-directory "journals/")
