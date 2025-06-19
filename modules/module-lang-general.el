@@ -7,8 +7,8 @@
 ;; Generic LSP Configuration
 ;; ---------------
 (use-package projectile
-  :bind-keymap
-  ("C-c p" . projectile-command-map))
+  :bind-keymap ("C-c p" . projectile-command-map)
+  :autoload (projectile-project-root))
 
 (use-package neotree
   :commands (neotree))
@@ -194,6 +194,8 @@
 
   ;; Optionally configure the narrowing key.
   ;; Both < and C-+ work reasonably well.
-  (setq consult-narrow-key "C-="))
+  (setq consult-narrow-key "C-=")
+
+  (setq consult-project-function (lambda (_) (projectile-project-root))))
 
 (provide 'module-lang-general)
