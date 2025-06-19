@@ -72,7 +72,10 @@ Intended as :around advice for `org-agenda-list'."
   (add-to-list 'org-export-backends 'md)
   (setq org-startup-with-inline-images t
         org-directory machine:org-directory
-        org-default-notes-file (expand-file-name "general.org" org-directory))
+        org-default-notes-file (expand-file-name "general.org" org-directory)
+        org-priority-highest ?A
+        org-priority-default ?C
+        org-priority-lowest ?E)
   (let ((scale 1.5))
     (setq org-format-latex-options
           (plist-put (plist-put org-format-latex-options :html-scale scale) :scale scale)))
