@@ -185,7 +185,8 @@ Intended as `:around' advice for
            ("T" . org-roam-dailies-goto-today)
            ("Y" . org-roam-dailies-goto-yesterday)
            ("D" . org-roam-dailies-goto-date)
-           ("o" . my/org-shortcuts))
+           ("o" . my/org-shortcuts)
+           ("s" . my/org-roam-consult-shortcuts))
   :config
   (setq org-roam-directory machine:org-roam-directory)
 
@@ -236,6 +237,24 @@ Intended as `:around' advice for
 
   (org-roam-db-autosync-mode))
 
+(use-package consult-org-roam
+  :ensure t
+  :after org-roam
+  :commands (consult-org-roam-file-find
+             consult-org-roam-backlinks
+             consult-org-roam-forward-links
+             consult-org-roam-search
+             my/org-roam-consult-shortcuts)
+  :hook (org-mode . consult-org-roam-mode)
+  :custom ( consult-org-roam-buffer-after-buffers t
+            "Show org-roam buffers after non-org-roam instead of at bottom")
+  :config (transient-define-prefix my/org-roam-consult-shortcuts ()
+    "Quickly runs a consult-org-roam-related command from a popup window."
+    ["Org-Roam nodes"
+     ("f" "Find an org-roam file" consult-org-roam-file-find)
+     ("b" "Search backlinks to current node" consult-org-roam-backlinks)
+     ("l" "Search forward links from current node" consult-org-roam-forward-links)
+     ("g" "Search text in org-roam files" consult-org-roam-search)]))
 
 (use-package window
   :config
