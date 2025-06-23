@@ -2,23 +2,14 @@
 ;; Scheme config
 ;; ---------------
 
-
-(defvar guix-checkout "~/Sync/code/guix"
-  "The location of the local Guix checkout.")
-
-(defvar guix-load-path "~/.config/guix/current/share/guile/site/3.0"
-  "The location of Guix Scheme modules.")
-
 (use-package geiser
-  :commands (geiser
-	     run-geiser)
-  :init
-  (put 'geiser-guile-load-path 'safe-local-variable #'listp)
-  (setq geiser-active-implementations '(guile racket chicken))
-  (with-eval-after-load 'geiser-guile
-    (add-to-list 'geiser-guile-load-path guix-checkout)
-    (add-to-list 'geiser-guile-load-path guix-load-path))
+  :commands (geiser)
+  :defines (geiser-active-implementations
+            geiser-default-implementation)
   :config
+  (put 'geiser-guile-load-path 'safe-local-variable #'listp)
+  (setq geiser-active-implementations '(guile racket chicken)
+        geiser-default-implementation 'guile)
   (defun setup-scheme-style ()
     (put 'eval-when 'scheme-indent-function 1)
     (put 'call-with-prompt 'scheme-indent-function 1)
@@ -43,11 +34,6 @@
 			       (rainbow-delimiters-mode)
 			       (setup-scheme-style)
 			       (setup-prettify-symbols)))))
-
-(use-package yasnippet
-  :commands (yas-minor-mode)
-  :config
-  (add-to-list 'yas-snippet-dirs (concat guix-checkout "/etc/snippets")))
 
 (use-package racket-mode
   :mode ("\\.rkt\\'")
