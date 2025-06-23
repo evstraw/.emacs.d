@@ -198,4 +198,9 @@
 
   (setq consult-project-function (lambda (_) (projectile-project-root))))
 
+(use-package vertico
+  :hook (emacs-startup . vertico-mode)
+  :bind ( :map vertico-map
+          ("TAB" . minibuffer-complete)))
+
 (provide 'module-lang-general)
