@@ -7,9 +7,6 @@
   :defines (geiser-active-implementations
             geiser-default-implementation)
   :config
-  (put 'geiser-guile-load-path 'safe-local-variable #'listp)
-  (setq geiser-active-implementations '(guile racket chicken)
-        geiser-default-implementation 'guile)
   (defun setup-scheme-style ()
     (put 'eval-when 'scheme-indent-function 1)
     (put 'call-with-prompt 'scheme-indent-function 1)
@@ -25,6 +22,10 @@
     (put 'sxml-match 'scheme-indent-function 1)
     (put 'pre-post-order 'scheme-indent-function 1)
     (put 'match-record 'scheme-indent-function 2))
+  :custom (( geiser-active-implementations '(guile racket)
+             "Use Geiser for Guile and Racket")
+           ( geiser-default-implementation 'guile
+             "Use Guile as default Scheme implementation"))
   :hook ((scheme-mode . (lambda ()
 			  (geiser-mode)
 			  (rainbow-delimiters-mode)
