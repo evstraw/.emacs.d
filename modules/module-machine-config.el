@@ -18,7 +18,8 @@
   :init (defalias 'find-if 'cl-find-if)
   (setq custom-file path:custom-file
         initsplit-customizations-alist
-        `(("^machine:.*" ,path:machine-config-file t t))))
+        `(("^machine:.*" ,path:machine-config-file t t)))
+  (load custom-file))
 
 (defgroup machine nil
   "Group for machine-specific settings."
