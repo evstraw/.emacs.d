@@ -24,6 +24,11 @@
     (put 'match-record 'scheme-indent-function 2))
   :custom (( geiser-active-implementations '(guile racket)
              "Use Geiser for Guile and Racket")
+           ( geiser-implementations-alist
+             '(((regexp "guix") guile)
+               ((regexp "\\.scm$") guile)
+               ((regexp "\\.rkt$") racket))
+             "Use Guile for Guix and .scm files in general, Racket for .rkt files")
            ( geiser-default-implementation 'guile
              "Use Guile as default Scheme implementation"))
   :hook ((scheme-mode . (lambda ()
