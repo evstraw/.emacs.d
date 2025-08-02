@@ -9,11 +9,9 @@
             path:user-home-directory))
 
 (use-package f
-  :ensure t
   :autoload (f-expand))
 
 (use-package initsplit
-  :ensure t
   :demand t
   :init (defalias 'find-if 'cl-find-if)
   (setq custom-file path:custom-file

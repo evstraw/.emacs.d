@@ -1,6 +1,5 @@
 ;; -*- lexical-binding: t; -*-
 (use-package f
-  :ensure t
   :autoload (f-ancestor-of-p
              f-expand
              f-relative))
@@ -112,7 +111,6 @@ Intended as :around advice for `org-agenda-list'."
   :bind (("S-<f15>" . my/org-clock-toggle)))
 
 (use-package transient
-  :ensure t
   :commands (my/org-shortcuts)
   :config
   (transient-define-prefix my/org-shortcuts ()
@@ -262,7 +260,6 @@ Intended as `:around' advice for
   (org-roam-db-autosync-mode))
 
 (use-package consult-org-roam
-  :ensure t
   :after org-roam
   :commands (consult-org-roam-file-find
              consult-org-roam-backlinks

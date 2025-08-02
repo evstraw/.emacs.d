@@ -92,7 +92,6 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package gradle-mode
-  :ensure t
   :commands (gradle-mode)
   :hook prog-mode)
 
@@ -124,7 +123,6 @@
   :hook (prog-mode . flycheck-mode))
 
 (use-package consult
-  :ensure t
   ;; Replace bindings. Lazily loaded by `use-package'.
   :bind (;; C-c bindings in `mode-specific-map'
          ("C-c M-x" . consult-mode-command)

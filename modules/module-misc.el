@@ -1,5 +1,4 @@
 (use-package f
-  :ensure t
   :autoload (f-expand))
 
 (use-package csv-mode
