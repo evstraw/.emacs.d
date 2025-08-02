@@ -26,8 +26,7 @@
   (doom-themes-org-config))
 
 (use-package nerd-icons
-  :after (doom-themes)
-  :ensure t)
+  :after (doom-themes))
 
 (use-package flymake
   :config (set-face-attribute 'flymake-warning nil :underline '(:color "yellow" :style wave))

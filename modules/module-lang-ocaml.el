@@ -11,7 +11,6 @@
   :after merlin
   :config (message "Flycheck ocaml loaded")
   :commands (flycheck-ocaml-setup)
-  :ensure t
   :hook (tuareg-mode . flycheck-ocaml-setup))
 
 (use-package merlin
