@@ -25,11 +25,6 @@
   :defines (path:modules-dir
 	    path:custom-file))
 
-(use-package f
-  :ensure t
-  :autoload (f-expand)
-  :functions (f-expand))
-
 (require 'module-machine-config)
 
 ;; ---------------

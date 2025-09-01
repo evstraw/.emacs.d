@@ -14,10 +14,7 @@
 	     pyvenv-workon))
 
 (use-package lsp-pyright
-  :ensure t
-  :hook (python-mode . (lambda ()
-                          (require 'lsp-pyright)
-                          (lsp))))  ; or lsp-deferred
+  :hook (python-mode . lsp))  ; or lsp-deferred
 
 ;;(add-hook 'ein:notebook-mode-hook
 ;;	  (lambda ()

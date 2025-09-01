@@ -7,34 +7,30 @@
   :mode (("\\.ml[ily]?$" . tuareg-mode)
 	 ("\\.topml$" . tuareg-mode)))
 
-(use-package flycheck-ocaml
-  :after merlin
-  :config (message "Flycheck ocaml loaded")
-  :commands (flycheck-ocaml-setup)
-  :ensure t
-  :hook (tuareg-mode . flycheck-ocaml-setup))
-
 (use-package merlin
-  :load-path "~/.opam/default/share/emacs/site-lisp"
   :commands (merlin-mode)
+  :after tuareg
   :custom
   (merlin-error-after-save nil "Don't check for errors on saving")
   :hook (tuareg-mode . merlin-mode))
 
+(use-package flycheck-ocaml
+  :after (merlin tuareg)
+  :config (message "Flycheck ocaml loaded")
+  :commands (flycheck-ocaml-setup)
+  :hook (tuareg-mode . flycheck-ocaml-setup))
+
 (use-package ocp-indent
-  :commands (ocp-indent-buffer)
-  :ensure t)
+  :if (executable-find "ocp-indent")
+  :commands (ocp-indent-buffer))
 
 (use-package ocamlformat
   :commands (ocamlformat)
-  :load-path "~/.opam/default/share/emacs/site-lisp"
   :custom (ocamlformat-enable 'enable-outside-detected-project))
 
 (use-package utop
-  :ensure t
   :commands (utop
 	     utop-minor-mode)
-  :after (company)
   :hook ((tuareg-mode . utop-minor-mode)
 	 (utop-mode . company-mode)))
 
