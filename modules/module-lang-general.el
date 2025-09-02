@@ -3,6 +3,10 @@
 ;; ---------------
 (put 'downcase-region 'disabled nil)
 
+(use-package whitespace
+  :config (setq whitespace-style '(trailing tabs tab-mark))
+  :hook (prog-mode . whitespace-mode))
+
 ;; ---------------
 ;; Generic LSP Configuration
 ;; ---------------
