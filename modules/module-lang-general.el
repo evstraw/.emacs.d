@@ -1,3 +1,11 @@
+;;; module-lang-general.el --- Generic language settings
+
+;;; Commentary:
+;;; Some of these cannot be put into use-package declarations yet because they are
+;;; not associated with any particular package.
+
+;;; Code:
+
 ;; ---------------
 ;; Enable commands disabled by default
 ;; ---------------
@@ -203,3 +211,4 @@
           ("TAB" . minibuffer-complete)))
 
 (provide 'module-lang-general)
+;;; module-lang-general.el ends here
