@@ -4,7 +4,10 @@
 (put 'downcase-region 'disabled nil)
 
 (use-package whitespace
-  :config (setq whitespace-style '(trailing tabs tab-mark))
+  :config (setq whitespace-style
+                '( face trailing tabs space-after-tab::tab
+                   space-after-tab::space space-after-tab space-before-tab::tab
+                   space-before-tab::space space-before-tab tab-mark)
   :hook (prog-mode . whitespace-mode))
 
 ;; ---------------
