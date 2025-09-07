@@ -2,14 +2,12 @@
 ;; Scheme config
 ;; ---------------
 
-
-(defvar guix-checkout "~/Sync/code/guix"
-  "The location of the local Guix checkout.")
-
-(defvar guix-load-path "~/.config/guix/current/share/guile/site/3.0"
-  "The location of Guix Scheme modules.")
-
-(defun setup-scheme-style ()
+(use-package geiser
+  :commands (geiser)
+  :defines (geiser-active-implementations
+            geiser-default-implementation)
+  :config
+  (defun setup-scheme-style ()
     (put 'eval-when 'scheme-indent-function 1)
     (put 'call-with-prompt 'scheme-indent-function 1)
     (put 'test-assert 'scheme-indent-function 1)
@@ -24,25 +22,15 @@
     (put 'sxml-match 'scheme-indent-function 1)
     (put 'pre-post-order 'scheme-indent-function 1)
     (put 'match-record 'scheme-indent-function 2))
-(use-package scheme
-  :config
-  :hook ((scheme-mode . setup-scheme-style)))
-
-(use-package lsp-scheme
-  :custom (lsp-scheme-implementation "guile")
-  :hook (scheme-mode . lsp-scheme))
-
-(use-package geiser
-  :commands (geiser
-	     run-geiser)
-  :custom (geiser-default-implementation 'guile)
-  :init
-  (put 'geiser-guile-load-path 'safe-local-variable #'listp)
-  (setq geiser-active-implementations '(guile racket chicken))
-  (with-eval-after-load 'geiser-guile
-    (add-to-list 'geiser-guile-load-path guix-checkout)
-    (add-to-list 'geiser-guile-load-path guix-load-path))
-  :config
+  :custom (( geiser-active-implementations '(guile racket)
+             "Use Geiser for Guile and Racket")
+           ( geiser-implementations-alist
+             '(((regexp "guix") guile)
+               ((regexp "\\.scm$") guile)
+               ((regexp "\\.rkt$") racket))
+             "Use Guile for Guix and .scm files in general, Racket for .rkt files")
+           ( geiser-default-implementation 'guile
+             "Use Guile as default Scheme implementation"))
   :hook ((scheme-mode . (lambda ()
 			  (geiser-mode)
 			  (rainbow-delimiters-mode)
@@ -51,11 +39,6 @@
 			       (rainbow-delimiters-mode)
 			       (setup-scheme-style)
 			       (setup-prettify-symbols)))))
-
-(use-package yasnippet
-  :commands (yas-minor-mode)
-  :config
-  (add-to-list 'yas-snippet-dirs (concat guix-checkout "/etc/snippets")))
 
 (use-package racket-mode
   :mode ("\\.rkt\\'")

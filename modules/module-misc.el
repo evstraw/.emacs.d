@@ -1,5 +1,4 @@
 (use-package f
-  :ensure t
   :autoload (f-expand))
 
 (use-package csv-mode
@@ -99,7 +98,8 @@ This can be useful in situations where you have a symbolically
      ("d" "Open dotfile" find-dotfiles)]
     ["Common commands"
      ("a" "Org Agenda" org-agenda)
-     ("f" "Visit linked file" visit-file-truename)])
+     ("f" "Visit linked file" visit-file-truename)
+     ("o" "Other Org shortcut commands" my/org-shortcuts)])
   :bind (("C-<menu>" . quick-goto)
 	 ("C-<f12>" . quick-goto)
 	 ("C-<XF86Tools>" . quick-goto)))
@@ -148,5 +148,8 @@ This can be useful in situations where you have a symbolically
   ;; Fixes a bug that occurs when trying to fontify results, see
   ;; https://www.reddit.com/r/emacs/comments/13jh7gk/comment/jkf225g/
   (setq esup-depth 0))
+
+(use-package autorevert
+  :config (setq auto-revert-interval 2))
   
 (provide 'module-misc)

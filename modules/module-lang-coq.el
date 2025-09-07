@@ -3,7 +3,6 @@
   (set-face-attribute 'proof-locked-face nil :background "#1b1834"))
 
 (use-package proof-general
-  :ensure t
   :commands (proofgeneral)
   :custom ((coq-compile-before-require t))
   :hook ((coq-mode . proofgeneral)

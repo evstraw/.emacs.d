@@ -1,9 +1,8 @@
 ;; -*- lexical-binding: t; -*-
 (use-package f
-  :ensure t
-  :autoload (f-canonical
-             f-dir-p
-             f-expand))
+  :autoload (f-ancestor-of-p
+             f-expand
+             f-relative))
 
 (use-package module-machine-config
   :defines (machine:org-directory))
@@ -56,12 +55,26 @@ Intended as :around advice for `org-agenda-list'."
 (use-package org
   :functions (org-get-agenda-file-buffer
               org-set-emph-re
-              org-agenda-files)
-  :commands (org-id-get-create)
+              org-agenda-files
+              org-time-stamp-format)
+  :commands (org-id-get-create
+             org-set-property
+             my/org-contextual-refile)
   :config
+  (defun my/org-contextual-refile ()
+    "Calls the appropriate Org/Org-Roam refile for entry at point."
+    (interactive)
+    (call-interactively (if (org-roam-node-at-point)
+                            #'org-roam-refile
+                          #'org-refile)))
+
   (add-to-list 'org-export-backends 'md)
-  (setq org-directory machine:org-directory
-        org-default-notes-file (expand-file-name "general.org" org-directory))
+  (setq org-startup-with-inline-images t
+        org-directory machine:org-directory
+        org-default-notes-file (expand-file-name "general.org" org-directory)
+        org-priority-highest ?A
+        org-priority-default ?C
+        org-priority-lowest ?E)
   (let ((scale 1.5))
     (setq org-format-latex-options
           (plist-put (plist-put org-format-latex-options :html-scale scale) :scale scale)))
@@ -71,9 +84,8 @@ Intended as :around advice for `org-agenda-list'."
   ;; Below is needed to apply the modified `org-emphasis-regexp-components'
   ;; settings from above.
   (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
-  (setq org-refile-targets
-        '((nil :maxlevel . 3)
-          (org-agenda-files :maxlevel . 3)))
+  :bind ( :map org-mode-map
+          ("C-c C-w" . my/org-contextual-refile))
   :hook ((org-mode . auto-fill-mode)
          (org-mode . org-indent-mode)
          (org-mode . company-mode)))
@@ -88,7 +100,8 @@ Intended as :around advice for `org-agenda-list'."
   :after org
   :functions (org-clocking-p)
   :commands (org-clock-out
-             org-clock-in-last)
+             org-clock-in-last
+             my/org-clock-toggle)
   :config
   (defun my/org-clock-toggle ()
     (interactive)
@@ -96,6 +109,23 @@ Intended as :around advice for `org-agenda-list'."
         (call-interactively #'org-clock-out)
       (call-interactively #'org-clock-in-last)))
   :bind (("S-<f15>" . my/org-clock-toggle)))
+
+(use-package transient
+  :commands (my/org-shortcuts)
+  :config
+  (transient-define-prefix my/org-shortcuts ()
+    "Quickly runs an Org-related command from a popup window."
+    ["Agenda"
+     ("a" "Org agenda" org-agenda)]
+    ["Clocks/Tasks"
+     ("i" "Clock in to task at point" org-clock-in)
+     ("I" "Clock in to last task" org-clock-in-last)
+     ("o" "Clock out of current task" org-clock-out)
+     ("j" "Jump to current/most recent task" org-clock-goto)
+     ("t" "Toggle between clocking out/clocking into last task"
+      my/org-clock-toggle)]
+    ["Commands"
+     ("u" "Ensure the entry at point has an ID" org-id-get-create)]))
 
 (use-package org-capture
   :after org
@@ -125,11 +155,28 @@ Intended as :around advice for `org-agenda-list'."
   :after org-roam
   :commands (org-roam-db-autosync-mode))
 
+(defun my/org-roam-dailies-goto-default-advice (orig-fn &rest args)
+  "Use the default capture template when jumping to Dailies file.
+
+Intended as `:around' advice for
+`org-roam-dailies-goto-today' (and others along those lines)."
+  (apply orig-fn (append args '("d"))))
+
 (use-package org-roam
-  :functions (my/org-roam-file-list
-              my/org-roam-refresh-agenda-list
-              org-roam-node-list
-              org-roam-node-file)
+  :init
+  (dolist (fn (list #'org-roam-dailies-goto-today
+                    #'org-roam-dailies-goto-yesterday
+                    #'org-roam-dailies-goto-date))
+    (advice-add fn :around #'my/org-roam-dailies-goto-default-advice))
+  :functions (org-roam-node-list
+              org-roam-node-file
+              org-roam-node-read
+              org-roam-node-at-point
+              my/org-roam-ensure-props
+              my/org-roam-file-list
+              my/org-roam-include-node-at-point-p)
+  :commands (my/org-roam-refresh-agenda-list
+             org-roam-refile)
   :bind* ( :prefix-map my/org-roam-quick-map
            :prefix "C-x C-n"
            ("f" . org-roam-node-find)
@@ -139,8 +186,66 @@ Intended as :around advice for `org-agenda-list'."
            ("T" . org-roam-dailies-goto-today)
            ("Y" . org-roam-dailies-goto-yesterday)
            ("D" . org-roam-dailies-goto-date)
-           ("u" . org-id-get-create))
+           ("o" . my/org-shortcuts)
+           ("s" . my/org-roam-consult-shortcuts))
   :config
+  (setq org-roam-directory machine:org-roam-directory)
+
+  (defun my/org-roam-ensure-props ()
+    (org-set-property "CREATED" (format-time-string
+                                 (org-time-stamp-format t t)
+                                 (current-time)))
+    (org-set-property "ID" (org-id-new)))
+
+  (defun my/org-roam-include-node-at-point-p ()
+    "Determine whether Org node at point should be included in the database."
+    (when-let ((bfilename (buffer-file-name))
+               (fname (f-relative bfilename org-roam-directory)))
+      (not (cl-find-if (lambda (path) (f-ancestor-of-p path fname))
+                       machine:org-roam-exclude))))
+
+  (defun my/org-roam-split-subtask ()
+    (interactive)
+    (if (not (org-clocking-p))
+        (progn (ding)
+               (message "Not currently clocked in to a task"))
+      (if-let ((roam-node (save-excursion
+                            (with-current-buffer (marker-buffer org-clock-marker)
+                              (goto-char (marker-position org-clock-marker))
+                              (org-roam-node-at-point)))))
+          (org-roam-capture-
+           :node roam-node
+           :templates `(("T" "subtask of current task" entry
+                         "* TODO %?"
+                         :target (node ,(org-roam-node-id roam-node))
+                         :clock-in t
+                         :clock-keep t
+                         :empty-lines 1
+                         :before-finalize my/org-roam-ensure-props)))
+        (progn (ding)
+               (message "Not currently clocked into an Org-Roam task")))))
+
+  (setq org-roam-db-node-include-function #'my/org-roam-include-node-at-point-p
+        org-roam-completion-everywhere t
+        org-roam-dailies-directory "journals/")
+  (let ((daily-target '(file+head "%<%Y_%m_%d>.org" "#+title: %<%b %-d, %Y>\n")))
+    (setq org-roam-capture-templates
+          `(( "d" "default" plain
+              "%?"
+              :target (file+head "pages/${slug}.org" "#+title: ${title}\n")
+              :unnarrowed t)
+            ( "j" "jira ticket" plain
+              "* Link to ticket\n[[jira:${title}]]\n\n* Short Summary\n%^{Short Summary}"
+              :if-new (file+head "pages/tickets/${slug}.org" "#+title: ${title}")))
+          org-roam-dailies-capture-templates
+          `(("d" "default" entry
+             "* %?"
+             :if-new ,daily-target
+             :before-finalize my/org-roam-ensure-props)
+            ("t" "task" entry
+             "* TODO %?\nSCHEDULED: %t"
+             :if-new ,daily-target
+             :before-finalize my/org-roam-ensure-props))))
   (defun my/org-roam-file-list ()
     "Returns a list of files containing nodes in the Org-Roam database."
     (seq-uniq (mapcar #'org-roam-node-file (org-roam-node-list))))
@@ -152,19 +257,34 @@ Intended as :around advice for `org-agenda-list'."
   ;; Build the agenda list the first time for the session
   (my/org-roam-refresh-agenda-list)
 
-  (setq org-roam-directory machine:org-roam-directory
-        org-roam-completion-everywhere t
-        org-roam-dailies-directory "journals/"
-        org-roam-capture-templates
-        '(("d" "default" plain
-           "%?" :target
-           (file+head "pages/${slug}.org" "#+title: ${title}\n")
-           :unnarrowed t))
-        org-roam-dailies-capture-templates
-        '(("d" "default" entry
-           "* %?"
-           :target (file+head "%<%Y_%m_%d>.org"
-                              "#+title: %<%b %-d, %Y>\n"))))
   (org-roam-db-autosync-mode))
+
+(use-package consult-org-roam
+  :after org-roam
+  :commands (consult-org-roam-file-find
+             consult-org-roam-backlinks
+             consult-org-roam-forward-links
+             consult-org-roam-search
+             my/org-roam-consult-shortcuts)
+  :hook (org-mode . consult-org-roam-mode)
+  :custom ( consult-org-roam-buffer-after-buffers t
+            "Show org-roam buffers after non-org-roam instead of at bottom")
+  :config (transient-define-prefix my/org-roam-consult-shortcuts ()
+    "Quickly runs a consult-org-roam-related command from a popup window."
+    ["Org-Roam nodes"
+     ("f" "Find an org-roam file" consult-org-roam-file-find)
+     ("b" "Search backlinks to current node" consult-org-roam-backlinks)
+     ("l" "Search forward links from current node" consult-org-roam-forward-links)
+     ("g" "Search text in org-roam files" consult-org-roam-search)]))
+
+(use-package window
+  :config
+  (add-to-list 'display-buffer-alist
+               '("\\*org-roam\\*"
+                 display-buffer-in-direction
+                 (direction . below)
+                 (slot . 0)
+                 (window-height . 0.33)
+                 (dedicated . t))))
 
 (provide 'module-org)

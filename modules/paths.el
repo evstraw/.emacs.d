@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 ;;; paths --- Various useful file/directory paths for Emacs config
 
 ;;; Commentary:
@@ -7,9 +8,7 @@
 ;;; Code:
 
 (use-package f
-  :demand t
-  :ensure t
-  :functions (f-expand))
+  :autoload (f-expand))
 
 (defconst path:user-home-directory (getenv "HOME")
   "The user's home directory (~).")

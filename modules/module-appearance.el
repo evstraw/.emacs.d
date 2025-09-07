@@ -26,8 +26,7 @@
   (doom-themes-org-config))
 
 (use-package nerd-icons
-  :after (doom-themes)
-  :ensure t)
+  :after (doom-themes))
 
 (use-package flymake
   :config (set-face-attribute 'flymake-warning nil :underline '(:color "yellow" :style wave))
@@ -50,14 +49,13 @@
 ;; allow splitting narrower windows
 (setq split-width-threshold 154)
 
-;; fix font
-(require 'machine-select)
-(set-face-attribute 'default nil
-		    :family "DejaVu Sans Mono"
-		    :height (if (eq machine-select-machine 'desktop) 94 95)
-		    :width 'normal)
-
-(use-package emojify
-  :commands (emojify-mode))
+;; Enable rich annotations using the Marginalia package
+(use-package marginalia
+  ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
+  ;; available in the *Completions* buffer, add it to the
+  ;; `completion-list-mode-map'.
+  :bind (:map minibuffer-local-map
+              ("M-A" . marginalia-cycle))
+  :hook (minibuffer-mode . marginalia-mode))
 
 (provide 'module-appearance)

@@ -1,14 +1,29 @@
+;;; module-lang-general.el --- Generic language settings
+
+;;; Commentary:
+;;; Some of these cannot be put into use-package declarations yet because they are
+;;; not associated with any particular package.
+
+;;; Code:
+
 ;; ---------------
 ;; Enable commands disabled by default
 ;; ---------------
 (put 'downcase-region 'disabled nil)
 
+(use-package whitespace
+  :config (setq whitespace-style
+                '( face trailing tabs space-after-tab::tab
+                   space-after-tab::space space-after-tab space-before-tab::tab
+                   space-before-tab::space space-before-tab tab-mark)
+  :hook (prog-mode . whitespace-mode))
+
 ;; ---------------
 ;; Generic LSP Configuration
 ;; ---------------
 (use-package projectile
-  :bind-keymap
-  ("C-c p" . projectile-command-map))
+  :bind-keymap ("C-c p" . projectile-command-map)
+  :autoload (projectile-project-root))
 
 (use-package neotree
   :commands (neotree))
@@ -122,4 +137,78 @@
   (setq-default flycheck-emacs-lisp-load-path 'inherit)
   :hook (prog-mode . flycheck-mode))
 
+(use-package consult
+  ;; Replace bindings. Lazily loaded by `use-package'.
+  :bind (;; C-c bindings in `mode-specific-map'
+         ("C-c M-x" . consult-mode-command)
+         ("C-c h" . consult-history)
+         ("C-c k" . consult-kmacro)
+         ("C-c m" . consult-man)
+         ("C-c i" . consult-info)
+         ([remap Info-search] . consult-info)
+         ;; C-x bindings in `ctl-x-map'
+         ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+         ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+         ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+         ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
+         ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
+         ;; Other custom bindings
+         ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+         ;; M-g bindings in `goto-map'
+         ("M-g f" . consult-flycheck)               ;; Alternative: consult-flycheck
+         ("M-g g" . consult-goto-line)             ;; orig. goto-line
+         ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+         ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
+         ("M-g m" . consult-mark)
+         ("M-g k" . consult-global-mark)
+         ("M-g i" . consult-imenu)
+         ("M-g I" . consult-imenu-multi)
+         ;; M-s bindings in `search-map'
+         ("M-s d" . consult-find)                  ;; Alternative: consult-fd
+         ("M-s c" . consult-locate)
+         ("M-s g" . consult-grep)
+         ("M-s l" . consult-line)
+         ;; Isearch integration
+         ("M-s e" . consult-isearch-history)
+         :map isearch-mode-map
+         ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
+         ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
+         ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
+         ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
+         ;; Minibuffer history
+         :map minibuffer-local-map
+         ("M-s" . consult-history)                 ;; orig. next-matching-history-element
+         ("M-r" . consult-history))                ;; orig. previous-matching-history-element
+
+  ;; Enable automatic preview at point in the *Completions* buffer. This is
+  ;; relevant when you use the default completion UI.
+  :hook (completion-list-mode . consult-preview-at-point-mode)
+  :config
+  ;; Optionally configure preview. The default value
+  ;; is 'any, such that any key triggers the preview.
+  ;; (setq consult-preview-key 'any)
+  (setq consult-preview-key "M-.")
+  ;; (setq consult-preview-key '("S-<down>" "S-<up>"))
+  ;; For some commands and buffer sources it is useful to configure the
+  ;; :preview-key on a per-command basis using the `consult-customize' macro.
+  (consult-customize
+   consult-theme :preview-key '(:debounce 0.2 any)
+   consult-ripgrep consult-git-grep consult-grep consult-man
+   consult-bookmark consult-recent-file consult-xref
+   consult--source-bookmark consult--source-file-register
+   consult--source-recent-file consult--source-project-recent-file
+   :preview-key '(:debounce 0.4 "M-."))
+
+  ;; Optionally configure the narrowing key.
+  ;; Both < and C-+ work reasonably well.
+  (setq consult-narrow-key "C-=")
+
+  (setq consult-project-function (lambda (_) (projectile-project-root))))
+
+(use-package vertico
+  :hook (emacs-startup . vertico-mode)
+  :bind ( :map vertico-map
+          ("TAB" . minibuffer-complete)))
+
 (provide 'module-lang-general)
+;;; module-lang-general.el ends here
